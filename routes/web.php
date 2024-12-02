@@ -11,6 +11,19 @@ use App\Http\Controllers\LocalizationController;
 // Route::get('/users', function () {
 //     return inertia('MyUsers');
 // })->name('users');
+Route::middleware([SetLocale::class])->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    // Add your other routes here...
+    Route::post('/switch-language', function (Illuminate\Http\Request $request) {
+        $locale = $request->input('locale', config('app.locale'));
+        session(['locale' => $locale]);
+        return response()->json(['success' => true]);
+    });
+});
+
 Route::get('/localization', function () {
     $locale = App::getLocale();
     
