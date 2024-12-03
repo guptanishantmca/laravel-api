@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+ 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocalizationController;
+use App\Http\Middleware\SetLocale;
+use Illuminate\Support\Facades\App;
 
 // Route::get('/users', function () {
 //     return inertia('MyUsers');
@@ -17,12 +20,27 @@ Route::middleware([SetLocale::class])->group(function () {
     });
 
     // Add your other routes here...
-    Route::post('/switch-language', function (Illuminate\Http\Request $request) {
-        $locale = $request->input('locale', config('app.locale'));
-        session(['locale' => $locale]);
-        return response()->json(['success' => true]);
-    });
+    
+
+Route::post('/switch-language', function (Request $request) {
+    $locale = $request->input('locale');
+
+    if (!in_array($locale, ['en', 'fi'])) {
+        abort(400, 'Invalid locale');
+    }
+
+    // Set locale for the current request
+    \App::setLocale($locale);
+
+    // Optionally, persist the locale in the session or a cookie
+    session(['locale' => $locale]);
+
+    return response()->json(['message' => 'Language switched to ' . $locale]);
 });
+
+});
+Route::post('/switch-language', [LocalizationController::class, 'switch']);
+
 
 Route::get('/localization', function () {
     $locale = App::getLocale();
@@ -38,6 +56,7 @@ Route::get('/localization', function () {
         'translations' => json_decode(file_get_contents($path), true),
     ]);
 });
+
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
  
 Route::get('/localization', [LocalizationController::class, 'index'])->name('users');

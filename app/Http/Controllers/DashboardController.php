@@ -7,16 +7,31 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
     public function index()
-    {
+    { 
         $locale = App::getLocale();
+        //dd($locale);
+       // dd(session('locale'));
         $translations = $this->getTranslations($locale, ['dashboard', 'common']); // Specify required namespaces
 
         return Inertia::render('Dashboard', [
             'locale' => $locale,
             'translations' => $translations,
+            'languages' => [
+                'en' => 'English',
+                'fi' => 'Finnish',
+            ],
         ]);
     }
-
+    // public function dashboard()
+    // {
+    //     return Inertia::render('Dashboard', [
+    //         'locale' => app()->getLocale(),
+    //         'languages' => [
+    //             'en' => 'English',
+    //             'fi' => 'Finnish',
+    //         ],
+    //     ]);
+    // }
     private function getTranslations(string $locale, array $namespaces): array
     {
         $translations = [];

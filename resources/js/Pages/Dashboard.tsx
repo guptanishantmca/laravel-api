@@ -4,7 +4,7 @@ import Sidebar from '@/Layouts/Sidebar';
 import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
  
-import { loadLocale } from '@/i18n';
+//import { loadLocale } from '@/i18n';
 
 export default function Dashboard() {
     const { t } = useTranslation('dashboard'); // Use the 'dashboard' namespace
@@ -24,7 +24,7 @@ export default function Dashboard() {
             <Sidebar></Sidebar>
             {/* <!-- Main Content --> */}
             <div className="flex-1 p-6 overflow-auto">
-                <h1 className="text-2xl font-bold mb-4">Welcome to the Admin Panel</h1>
+                <h1 className="text-2xl font-bold mb-4">{t('welcome')} to the Admin Panel</h1>
                 <p className="text-gray-600">This is your admin dashboard where you can manage everything!</p>
             </div>
         </div>            
