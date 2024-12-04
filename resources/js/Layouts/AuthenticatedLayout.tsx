@@ -6,16 +6,27 @@ import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 import i18n from '../i18n';
 import LanguageSwitcher from '@/Components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
+interface HeaderProps {
+    currentNamespaces: string[];
+}
+interface AuthenticatedProps {
+    header?: ReactNode;
+    currentNamespaces: string[]; // New Prop
+}
+
 interface Language {
     [key: string]: string; // Example: { en: 'English', es: 'Español' }
   }
 export default function Authenticated({
     header,
     children,
-}: PropsWithChildren<{ header?: ReactNode }>) {
+    currentNamespaces, // Receive currentNamespaces here
+}: PropsWithChildren<AuthenticatedProps>) {
     const user = usePage().props.auth.user;
-    
-
+    const { t } = useTranslation('header');
+    console.log('oo',usePage().props);
+ 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
         const { locale, languages } = usePage().props as unknown as {
@@ -67,20 +78,20 @@ export default function Authenticated({
                                 href={route('dashboard')}
                                 active={route().current('dashboard')}
                             >
-                                Dashboard
+                                 {t('dashboard')} 
                             </NavLink>
                             <NavLink
                                 href={route('users')}
                                 active={route().current('users')}
                             >
-                                My Users
+                                 {t('my users')} 
                             </NavLink>
                         </div>
                     </div>
     
                     <div className="flex items-center">
                         {/* Language Switcher */}
-                        <LanguageSwitcher/>
+                        <LanguageSwitcher currentNamespaces={currentNamespaces} />
                         {/* <div className="hidden sm:flex space-x-4">
                             <button
                                 onClick={() => handleChangeLanguage('en')}
@@ -166,14 +177,14 @@ export default function Authenticated({
     
                                 <Dropdown.Content>
                                     <Dropdown.Link href={route('profile.edit')}>
-                                        Profile
+                                    {t('profile')} 
                                     </Dropdown.Link>
                                     <Dropdown.Link
                                         href={route('logout')}
                                         method="post"
                                         as="button"
                                     >
-                                        Log Out
+                                         {t('logout')} 
                                     </Dropdown.Link>
                                 </Dropdown.Content>
                             </Dropdown>
@@ -194,7 +205,7 @@ export default function Authenticated({
                         href={route('dashboard')}
                         active={route().current('dashboard')}
                     >
-                        Dashboard
+                        {t('dashboard')} 
                     </ResponsiveNavLink>
                 </div>
     
@@ -210,14 +221,14 @@ export default function Authenticated({
     
                     <div className="mt-3 space-y-1">
                         <ResponsiveNavLink href={route('profile.edit')}>
-                            Profile
+                        {t('profile')} 
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             method="post"
                             href={route('logout')}
                             as="button"
                         >
-                            Log Out
+                            {t('logout')} 
                         </ResponsiveNavLink>
                     </div>
                 </div>

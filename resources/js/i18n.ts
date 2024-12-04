@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import translations from './utils/loadLanguage';
 import HttpBackend from 'i18next-http-backend';
 import sidenav from '../js/assets/locales/en/sidenav.json';
+import header from '../js/assets/locales/en/header.json';
 const resources = translations;
 i18n
 .use(HttpBackend)
@@ -17,14 +18,15 @@ i18n
       resources: {
         en: {
             sidenav: sidenav,
+            header: header,
              
         },
     },
     interpolation: {
       escapeValue: false, // React already escapes by default
     },
-    ns: ['dashboard','sidenav'], // Define namespaces
-    defaultNS: 'sidenav',
+    ns: ['header','sidenav'], // Define namespaces
+    defaultNS: 'header',
   });
 
 export const setInitialLocale = (locale: string) => {

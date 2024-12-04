@@ -9,7 +9,7 @@ export default function Sidebar({
     const [isUsersOpen, setIsUsersOpen] = useState(false);
     const [isReportsOpen, setIsReportsOpen] = useState(false);
     const [isSalesReportsOpen, setIsSalesReportsOpen] = useState(false);
-    const { t } = useTranslation();
+    const { t } = useTranslation('sidenav');
     return (
         <div className="flex">
             {/* Mobile Toggle Button */}

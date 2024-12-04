@@ -12,7 +12,7 @@ export default function Dashboard() {
     
   
     return (
-        <AuthenticatedLayout
+        <AuthenticatedLayout  currentNamespaces={['dashboard']}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     {t('dashboard')} 
