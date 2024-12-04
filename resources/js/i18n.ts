@@ -1,16 +1,30 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import translations from './utils/loadLanguage';
+import HttpBackend from 'i18next-http-backend';
+import sidenav from '../js/assets/locales/en/sidenav.json';
 const resources = translations;
 i18n
+.use(HttpBackend)
   .use(initReactI18next)
   .init({
     lng: 'en', // Default language
     fallbackLng: 'en',
     debug: true,
+    backend: {
+        loadPath: '/localization/{{lng}}/{{ns}}',
+      },
+      resources: {
+        en: {
+            sidenav: sidenav,
+             
+        },
+    },
     interpolation: {
       escapeValue: false, // React already escapes by default
     },
+    ns: ['dashboard','sidenav'], // Define namespaces
+    defaultNS: 'sidenav',
   });
 
 export const setInitialLocale = (locale: string) => {

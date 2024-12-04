@@ -7,11 +7,11 @@ const LanguageSwitcher: React.FC = () => {
     const { i18n } = useTranslation();
     const isActiveLanguage = (lang: string) => i18n.language === lang;
     const changeLanguage = async (lang: string) => {
-        const namespace = 'dashboard'; // Adjust this if using multiple namespaces
-        const translations = await loadLanguage(lang, namespace);
-
+        const namespace = [ 'sidenav', 'dashboard']; // Adjust this if using multiple namespaces
+       // const translations = await loadLanguage(lang, namespace);
+        await loadLanguage(lang, namespace);
         // Add resources dynamically
-        i18n.addResourceBundle(lang, namespace, translations, true, true);
+       // i18n.addResourceBundle(lang, namespace, translations, true, true);
         i18n.changeLanguage(lang);
     };
 

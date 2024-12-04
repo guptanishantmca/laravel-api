@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode, useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-
+import { useTranslation } from 'react-i18next';
 export default function Sidebar({
     header,
     children,
@@ -9,7 +9,7 @@ export default function Sidebar({
     const [isUsersOpen, setIsUsersOpen] = useState(false);
     const [isReportsOpen, setIsReportsOpen] = useState(false);
     const [isSalesReportsOpen, setIsSalesReportsOpen] = useState(false);
-
+    const { t } = useTranslation();
     return (
         <div className="flex">
             {/* Mobile Toggle Button */}
@@ -48,7 +48,7 @@ export default function Sidebar({
                 <nav className="flex-1 px-2 space-y-2">
                     {/* Dashboard Link */}
                     <Link className='block px-4 py-2 rounded hover:bg-gray-700' href={route('dashboard')}>
-             Dashboard
+                    {t('dashboard')} 
         </Link>
          
 
@@ -58,7 +58,7 @@ export default function Sidebar({
                             onClick={() => setIsUsersOpen(!isUsersOpen)}
                             className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-700"
                         >
-                            <span>Users</span>
+                            <span>{t('users')} </span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className={`w-5 h-5 transform transition-transform ${
@@ -79,13 +79,13 @@ export default function Sidebar({
                         {isUsersOpen && (
                             <div className="pl-6 space-y-1">
                                 <Link className='block px-4 py-2 rounded hover:bg-gray-700' href={route('users')}>
-            All Users
-        </Link>
+                                {t('all users')} 
+                                        </Link>
                                 <a
                                     href="/users/create"
                                     className="block px-4 py-2 rounded hover:bg-gray-700"
                                 >
-                                    Create User
+                                     {t('create user')} 
                                 </a>
                             </div>
                         )}

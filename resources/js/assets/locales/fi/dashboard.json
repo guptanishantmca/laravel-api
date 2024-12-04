@@ -1,4 +1,5 @@
 {
-    "dashboard" : "Finnish Dashboard",
-    "welcome" : "Finnish Welcome to the Admin Panel"
+    "dashboard": "Finnish Dashboard",
+    "welcome": "Finnish Welcome to the Admin Panel",
+    "welcome message": "Finnish This is your admin dashboard where you can manage everything!"
 }

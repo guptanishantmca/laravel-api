@@ -43,10 +43,10 @@ Route::post('/switch-language', function (Request $request) {
 //Route::post('/switch-language', [LocalizationController::class, 'switch']);
 
 
-Route::get('/localization', function () {
+Route::get('/localization/{locale}/{namespace}', function ($locale, $namespace) {
     $locale = App::getLocale();
     
-    $path = resource_path("lang/{$locale}.json");
+    $path = resource_path("lang/{$locale}/{$namespace}.json");
 
     if (!file_exists($path)) {
         abort(404, 'Localization file not found');

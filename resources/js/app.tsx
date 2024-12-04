@@ -5,7 +5,11 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import i18n, { setInitialLocale,loadTranslations } from './i18n'; // i18n setup
-import { useEffect } from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { I18nextProvider } from 'react-i18next';
+ 
+import App from './App';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 interface InitialProps {
@@ -48,7 +52,12 @@ createInertiaApp({
         }
         
 
-        root.render(<App {...props} />);
+        root.render(<React.StrictMode>
+            <I18nextProvider i18n={i18n}>
+            <App {...props} />
+            </I18nextProvider>
+        </React.StrictMode>
+        );
     },
     progress: {
         color: '#4B5563',
