@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\App;
+use Illuminate\Http\Request;
 
 // Route::get('/users', function () {
 //     return inertia('MyUsers');
@@ -39,7 +40,7 @@ Route::post('/switch-language', function (Request $request) {
 });
 
 });
-Route::post('/switch-language', [LocalizationController::class, 'switch']);
+//Route::post('/switch-language', [LocalizationController::class, 'switch']);
 
 
 Route::get('/localization', function () {

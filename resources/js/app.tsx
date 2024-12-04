@@ -38,12 +38,8 @@ createInertiaApp({
             i18n.changeLanguage(locale);
            
             setInitialLocale(locale); // Save to localStorage
-        } else {
-            const savedLanguage = localStorage.getItem('language') || 'en';
-            
-            i18n.changeLanguage(savedLanguage);
-        }
-        
+            localStorage.setItem('language', locale);
+        }  
 
         if (translations) {
             Object.entries(translations).forEach(([namespace, data]) => {

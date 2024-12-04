@@ -5,7 +5,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 import i18n from '../i18n';
-
+import LanguageSwitcher from '@/Components/LanguageSwitcher';
 interface Language {
     [key: string]: string; // Example: { en: 'English', es: 'Español' }
   }
@@ -42,7 +42,7 @@ export default function Authenticated({
                 i18n.changeLanguage(locale);
                 localStorage.setItem('language', locale);
                 // Reload the page to apply the new locale
-                 window.location.reload();
+              //   window.location.reload();
             } catch (error) {
                 console.error('Error switching language:', error);
             }
@@ -80,7 +80,8 @@ export default function Authenticated({
     
                     <div className="flex items-center">
                         {/* Language Switcher */}
-                        <div className="hidden sm:flex space-x-4">
+                        <LanguageSwitcher/>
+                        {/* <div className="hidden sm:flex space-x-4">
                             <button
                                 onClick={() => handleChangeLanguage('en')}
                                 className={`text-sm font-medium ${
@@ -97,7 +98,7 @@ export default function Authenticated({
                             >
                                 FI
                             </button>
-                        </div>
+                        </div> */}
 
     
                         {/* Message Icon */}
