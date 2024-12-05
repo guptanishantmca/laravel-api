@@ -7,6 +7,7 @@ import { PropsWithChildren, ReactNode, useState } from 'react';
 import i18n from '../i18n';
 import LanguageSwitcher from '@/Components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 interface HeaderProps {
     currentNamespaces: string[];
 }
@@ -23,9 +24,15 @@ export default function Authenticated({
     children,
     currentNamespaces, // Receive currentNamespaces here
 }: PropsWithChildren<AuthenticatedProps>) {
+    useEffect(() => {
+         
+        if (!currentNamespaces || currentNamespaces.length === 0) {
+            console.warn('currentNamespaces is not defined. Falling back to default namespaces.');
+        }
+    }, [currentNamespaces]);
     const user = usePage().props.auth.user;
     const { t } = useTranslation('header');
-    console.log('oo',usePage().props);
+    
  
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -84,7 +91,7 @@ export default function Authenticated({
                                 href={route('users')}
                                 active={route().current('users')}
                             >
-                                 {t('my users')} 
+                                 {t('my_users')} 
                             </NavLink>
                         </div>
                     </div>

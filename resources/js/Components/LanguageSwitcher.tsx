@@ -6,23 +6,55 @@ interface LanguageSwitcherProps {
     currentNamespaces: string[];
 }
 
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ currentNamespaces }) => {
+const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ currentNamespaces  = ['header'] }) => {
     const { i18n } = useTranslation();
 
     const globalNamespaces = ['sidenav', 'header']; // Global namespaces for all pages
     const isActiveLanguage = (lang: string) => i18n.language === lang;
 
-    const changeLanguage = async (lang: string) => {
-        // Merge global namespaces with current page namespaces
-        const namespaces = [...globalNamespaces, ...currentNamespaces];
+    // const changeLanguage = async (lang: string) => {
+    //     // Merge global namespaces with current page namespaces
+    //     const namespaces = [...globalNamespaces, ...currentNamespaces];
+
+    //     // Load translations dynamically for all required namespaces
+    //     await loadLanguage(lang, namespaces);
+
+    //     // Switch to the selected language
+    //     i18n.changeLanguage(lang);
+    //     localStorage.setItem('language', lang);
+    // };
+    const changeLanguage = async (locale: string) => {
+        try {
+            const response = await fetch('/switch-language', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+                },
+                body: JSON.stringify({ locale }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to switch language');
+            }
+
+            const data = await response.json();
+            
+            const namespaces = [...globalNamespaces, ...currentNamespaces];
 
         // Load translations dynamically for all required namespaces
-        await loadLanguage(lang, namespaces);
+        await loadLanguage(locale, namespaces);
 
         // Switch to the selected language
-        i18n.changeLanguage(lang);
-    };
+        i18n.changeLanguage(locale);
+        localStorage.setItem('language', locale);
 
+            // Reload the page to apply the new locale
+          //   window.location.reload();
+        } catch (error) {
+            console.error('Error switching language:', error);
+        }
+    };
     return (
         <div className="hidden sm:flex space-x-4">
             <button

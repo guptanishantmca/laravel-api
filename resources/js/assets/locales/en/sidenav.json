@@ -1,6 +1,6 @@
 {
     "dashboard": "Dashboard",
     "users": "Users",
-    "all users": "All Users",
-    "create users": "Create Users"
+    "all_users": "All Users",
+    "create_users": "Create Users"
 }

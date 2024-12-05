@@ -79,13 +79,13 @@ export default function Sidebar({
                         {isUsersOpen && (
                             <div className="pl-6 space-y-1">
                                 <Link className='block px-4 py-2 rounded hover:bg-gray-700' href={route('users')}>
-                                {t('all users')} 
+                                {t('all_users')} 
                                         </Link>
                                 <a
                                     href="/users/create"
                                     className="block px-4 py-2 rounded hover:bg-gray-700"
                                 >
-                                     {t('create user')} 
+                                     {t('create_users')} 
                                 </a>
                             </div>
                         )}

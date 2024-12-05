@@ -4,12 +4,12 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
-import i18n, { setInitialLocale,loadTranslations } from './i18n'; // i18n setup
-import React from 'react';
+import i18n, { setInitialLocale } from './i18n'; // i18n setup
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { I18nextProvider } from 'react-i18next';
- 
-import App from './App';
+
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 interface InitialProps {
@@ -22,7 +22,7 @@ interface InitialProps {
         };
     };
 }
- 
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
@@ -30,36 +30,43 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        
-       // const { translations, locale } = props.initialPage.props;
-       const { translations, locale } = props.initialPage.props as InitialProps["props"]["initialPage"]["props"];
 
-       
-    
+        // const { translations, locale } = props.initialPage.props;
+        const { translations, locale } = props.initialPage.props as InitialProps["props"]["initialPage"]["props"];
 
+
+
+        const savedLanguage = localStorage.getItem('language') || 'en';
+        i18n.changeLanguage(savedLanguage);
+        setInitialLocale(savedLanguage);
         // Set initial locale and preload translations
-        if (locale) {
-            i18n.changeLanguage(locale);
-           
-            setInitialLocale(locale); // Save to localStorage
-            localStorage.setItem('language', locale);
-        }  
+        // if (locale) {
+        //     i18n.changeLanguage(locale);
+
+        //     setInitialLocale(locale); // Save to localStorage
+        //     localStorage.setItem('language', locale);
+        // }  
 
         if (translations) {
             Object.entries(translations).forEach(([namespace, data]) => {
-                i18n.addResources(locale, namespace, data);
+                i18n.addResources(savedLanguage, namespace, data);
             });
+            i18n.changeLanguage(savedLanguage);
         }
-        
+
 
         root.render(<React.StrictMode>
             <I18nextProvider i18n={i18n}>
-            <App {...props} />
+                <App {...props} />
+ 
             </I18nextProvider>
         </React.StrictMode>
+    
+        
         );
     },
     progress: {
         color: '#4B5563',
     },
 });
+    

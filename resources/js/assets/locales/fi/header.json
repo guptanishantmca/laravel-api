@@ -1,6 +1,6 @@
 {
     "dashboard": "FI Dashboard",
-    "my users": "FI My Users",
+    "my_users": "FI My Users",
     "profile": "FI Profile",
-    "logout users": "FI Logout"
+    "logout": "FI Logout"
 }

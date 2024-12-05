@@ -1,6 +1,6 @@
 {
-    "dashboard": "Dashboard",
-    "my users": "My Users",
+    "dashboard": "En Dashboard",
+    "my_users": "En My Users",
     "profile": "Profile",
-    "logout users": "Logout"
+    "logout": "Logout"
 }

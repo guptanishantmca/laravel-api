@@ -4,16 +4,16 @@ import translations from './utils/loadLanguage';
 import HttpBackend from 'i18next-http-backend';
 import sidenav from '../js/assets/locales/en/sidenav.json';
 import header from '../js/assets/locales/en/header.json';
-const resources = translations;
+ 
 i18n
 .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    lng: 'en', // Default language
+    lng: localStorage.getItem('language') || 'en', // Load from localStorage or fallback to 'en'
     fallbackLng: 'en',
     debug: true,
     backend: {
-        loadPath: '/localization/{{lng}}/{{ns}}',
+        loadPath: '/localization/{{lng}}/{{ns}}', 
       },
       resources: {
         en: {
@@ -22,6 +22,7 @@ i18n
              
         },
     },
+    // saveMissing: true,
     interpolation: {
       escapeValue: false, // React already escapes by default
     },
@@ -32,8 +33,9 @@ i18n
 export const setInitialLocale = (locale: string) => {
     console.log('i18n',locale);
     i18n.changeLanguage(locale);
+ 
     localStorage.setItem('language', locale); // Save language preference in localStorage
-  
+    
     
 };
 

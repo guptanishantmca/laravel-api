@@ -9,9 +9,9 @@ class DashboardController extends Controller
     public function index()
     { 
         $locale = App::getLocale();
-       // dd($locale);
-       //dd(session('locale'));
-        $translations = $this->getTranslations($locale, ['dashboard']); // Specify required namespaces
+        //dd($locale);
+       // dd(session('locale'));
+        $translations = $this->getTranslations($locale, ['dashboard',  'header','sidenav']); // Specify required namespaces
 
         return Inertia::render('Dashboard', [
             'locale' => $locale,
