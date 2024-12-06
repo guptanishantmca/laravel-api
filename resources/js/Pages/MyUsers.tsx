@@ -4,7 +4,7 @@ import Sidebar from '@/Layouts/Sidebar';
 import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
-
+import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 interface User {
     id: number;
     name: string;
@@ -14,14 +14,20 @@ interface User {
 
 interface NewPageProps {
     users: User[];
+    currentNamespaces: string[];
 }
 
-const MyUsers: React.FC<NewPageProps> = ({ users }) => {
+const MyUsers: React.FC<NewPageProps> = ({ users  }) => {
     const { t } = useTranslation('users');
-    useEffect(() => {
-        i18n.loadNamespaces('users'); // Dynamically load the 'dashboard' namespace
-      }, []);
-    console.log('asasas',localStorage.getItem('language'),useTranslation('users'));
+    const isLoaded = useLoadNamespaces(['users']);
+    // Dynamically load the 'users' namespace
+    //const { t } = useTranslation('users');
+     // Load the 'users' namespace for this page
+    
+     if (!isLoaded) {
+        return <div>Loading translations...</div>; // Show a loading state until translations are ready
+    }
+
 
     return (
         <AuthenticatedLayout  currentNamespaces={['users']}

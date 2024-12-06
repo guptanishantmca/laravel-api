@@ -16,10 +16,8 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'locale' => $locale,
             'translations' => $translations,
-            'languages' => [
-                'en' => 'English',
-                'fi' => 'Finnish',
-            ],
+            'currentNamespaces' => ['dashboard', 'header', 'sidenav'],
+            
         ]);
     }
     // public function dashboard()

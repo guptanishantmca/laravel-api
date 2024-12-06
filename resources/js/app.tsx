@@ -32,20 +32,24 @@ createInertiaApp({
 
 
         // const { translations, locale } = props.initialPage.props;
-        const { translations, locale } = props.initialPage.props as InitialProps["props"]["initialPage"]["props"];
-
+        const { locale, translations } = props.initialPage.props;
 
 
         const savedLanguage = localStorage.getItem('language') || 'en';
         i18n.changeLanguage(savedLanguage);
         setInitialLocale(savedLanguage);
         // Set initial locale and preload translations
-        // if (locale) {
-        //     i18n.changeLanguage(locale);
-
-        //     setInitialLocale(locale); // Save to localStorage
-        //     localStorage.setItem('language', locale);
-        // }  
+        if (locale && translations) {
+            console.log('Translations object:', translations);
+            Object.entries(translations).forEach(([namespace, data]) => {
+                console.log(`Adding namespace: ${namespace}`, data);
+                i18n.addResourceBundle(locale, namespace, data, true, true);
+            });
+            i18n.changeLanguage(locale); // Ensure this happens after adding the namespaces
+        }
+        
+        
+        
 
         if (translations) {
             Object.entries(translations).forEach(([namespace, data]) => {
@@ -56,10 +60,10 @@ createInertiaApp({
 
 
         root.render(<React.StrictMode>
-            <I18nextProvider i18n={i18n}>
+            
                 <App {...props} />
  
-            </I18nextProvider>
+            
         </React.StrictMode>
     
         

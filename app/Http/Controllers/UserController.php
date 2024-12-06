@@ -11,11 +11,12 @@ class UserController extends Controller
         $locale = App::getLocale();
         $users = User::select('id', 'name', 'email', 'created_at')->get();
         $translations = getTranslations($locale, ['users', 'header','sidenav']); // Specify required namespaces
-
+        logger()->info('Translations', $translations);
         return Inertia::render('MyUsers', [
             'users' => $users,
             'locale' => $locale,
             'translations' => $translations,
+            'currentNamespaces' => ['users', 'header', 'sidenav'],
         ]);
     }
 }

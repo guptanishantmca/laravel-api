@@ -4,14 +4,13 @@ import Sidebar from '@/Layouts/Sidebar';
 import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
- 
+import useLoadNamespaces from '@/hooks/useLoadNamespaces';
+
 //import { loadLocale } from '@/i18n';
 
-export default function Dashboard() {
+const Dashboard: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }) => {
     const { t } = useTranslation('dashboard'); // Use the 'dashboard' namespace
-    useEffect(() => {
-        i18n.loadNamespaces('dashboard'); // Dynamically load the 'dashboard' namespace
-      }, []);
+    useLoadNamespaces(['dashboard']);
   
     return (
         <AuthenticatedLayout  currentNamespaces={['dashboard']}
@@ -37,3 +36,4 @@ export default function Dashboard() {
     
     );
 }
+export default Dashboard;
