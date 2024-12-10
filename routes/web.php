@@ -11,6 +11,7 @@ use App\Http\Controllers\LocalizationController;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 // Route::get('/users', function () {
 //     return inertia('MyUsers');
@@ -63,6 +64,39 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::get('/localization', [LocalizationController::class, 'index'])->name('users');
 
 Route::get('/users', [UserController::class, 'index'])->name('users');
+
+
+Route::post('/users', function (Request $request) {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+    ]);
+
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt('password'), // Assign a default password
+    ]);
+
+    return redirect()->back();
+});
+
+Route::put('/users/{user}', function (Request $request, User $user) {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+    ]);
+
+    $user->update($request->only(['name', 'email']));
+
+    return redirect()->back();
+});
+
+Route::delete('/users/{user}', function (User $user) {
+    $user->delete();
+
+    return redirect()->back();
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

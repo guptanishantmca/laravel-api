@@ -4,6 +4,9 @@
     "ID" : "ID",
     "Name" : "Name",
     "Email" : "Email",
-    "Joined" : "Joined"
+    "Joined" : "Joined",
+    "edit" : "Edit",
+    "delete" : "Delete",
+    "add_user" : "Add User"
     
 }
