@@ -21,4 +21,5 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin = Permission::create(['name' => 'Delete Users','group'=>1]);
         
     }
+    
 }

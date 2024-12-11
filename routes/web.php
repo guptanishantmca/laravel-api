@@ -11,10 +11,44 @@ use App\Http\Controllers\LocalizationController;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\RolePermissionController;
 
-// Route::get('/users', function () {
-//     return inertia('MyUsers');
-// })->name('users');
+ 
+
+Route::get('/roles/manage', function () {
+    return Inertia::render('RolePermissionManager');
+})->middleware(['auth'])->name("roles.manage");
+
+
+Route::get('/roles-and-permissions', [RolePermissionController::class, 'getRolesAndPermissions'])
+    ->name('roles.permissions')
+    ->middleware(['auth']);
+
+// Route to update role permissions
+Route::post('/roles/{role}/permissions', [RolePermissionController::class, 'updateRolePermissions'])
+    ->name('roles.permissions.update')
+    ->middleware(['auth']);
+
+Route::get('/users', function () {
+    $users = User::with('roles')->get()->map(function ($user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->roles->pluck('name')->first(), // Assuming a single role per user
+            'created_at' => $user->created_at,
+        ];
+    });
+
+    $roles = Role::pluck('name');
+
+    return Inertia::render('MyUsers', [
+        'users' => $users,
+        'roles' => $roles,
+    ]);
+})->name('users');
 Route::middleware([SetLocale::class])->group(function () {
     Route::get('/', function () {
         return view('welcome');
@@ -60,9 +94,48 @@ Route::get('/localization/{locale}/{namespace}', function ($locale, $namespace) 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
  
-Route::get('/localization', [LocalizationController::class, 'index'])->name('users');
+//Route::get('/localization', [LocalizationController::class, 'index'])->name('users');
 
-Route::get('/users', [UserController::class, 'index'])->name('users');
+//Route::get('/users', [UserController::class, 'index'])->name('users');
+
+
+Route::post('/users', function (Request $request) {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'role' => 'required|string|exists:roles,name', // Ensure the role exists
+    ]);
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt('password'),
+    ]);
+
+    $user->assignRole($request->role); // Assign role to the user
+
+    return redirect()->back();
+});
+
+Route::put('/users/{user}', function (Request $request, User $user) {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'role' => 'required|string|exists:roles,name',
+    ]);
+
+    $user->update($request->only(['name', 'email']));
+    $user->syncRoles([$request->role]); // Update user role
+
+    return redirect()->back();
+});
+
+
+Route::delete('/users/{user}', function (User $user) {
+    $user->delete();
+
+    return redirect()->back();
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
