@@ -9,15 +9,18 @@ interface User {
     id: number;
     name: string;
     email: string;
+    role: string; // Add role property
     created_at: string;
 }
 
 interface NewPageProps {
     users: User[];
+    roles: string[]; // List of available roles
     currentNamespaces: string[];
 }
 
-const MyUsers: React.FC<NewPageProps> = ({ users }) => {
+const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
+    
     const { t } = useTranslation('users');
     const isLoaded = useLoadNamespaces(['users']);
     const [showForm, setShowForm] = useState(false);
@@ -27,6 +30,7 @@ const MyUsers: React.FC<NewPageProps> = ({ users }) => {
     const { data, setData, post, put, delete: destroy, reset, errors } = useForm({
         name: '',
         email: '',
+        role: '', // Add role to form data
     });
 
     if (!isLoaded) {
@@ -56,9 +60,11 @@ const MyUsers: React.FC<NewPageProps> = ({ users }) => {
     };
 
     const handleEditClick = (user: User) => {
+ 
         setData({
             name: user.name,
             email: user.email,
+            role: user.role, // Populate role for editing
         });
         setCurrentUserId(user.id);
         setIsEditing(true);
@@ -106,6 +112,8 @@ const MyUsers: React.FC<NewPageProps> = ({ users }) => {
                             {t('add_user')}
                         </button>
 
+                         
+
                         {/* User Form */}
                         {showForm && (
                             <form onSubmit={handleFormSubmit} className="mb-6 p-4 border rounded bg-gray-50">
@@ -137,6 +145,28 @@ const MyUsers: React.FC<NewPageProps> = ({ users }) => {
                                         <p className="text-red-500 text-sm">{errors.email}</p>
                                     )}
                                 </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        {t('Role')}
+                                    </label>
+                                    <select
+                                        value={data.role || ''} // Default to an empty string if data.role is undefined
+                                        onChange={(e) => setData('role', e.target.value)}
+                                        className="mt-1 p-2 block w-full border rounded-md"
+                                    >
+                                        <option value="">{t('Select a Role')}</option>
+                                        {roles.map((role) => (
+                                            <option key={role} value={role}>
+                                                {role}
+                                            </option>
+                                        ))}
+                                    </select>
+
+
+                                    {errors.role && (
+                                        <p className="text-red-500 text-sm">{errors.role}</p>
+                                    )}
+                                </div>
                                 <div>
                                     <button
                                         type="submit"
@@ -166,6 +196,7 @@ const MyUsers: React.FC<NewPageProps> = ({ users }) => {
                                     <th className="px-4 py-2 border">{t('ID')}</th>
                                     <th className="px-4 py-2 border">{t('Name')}</th>
                                     <th className="px-4 py-2 border">{t('Email')}</th>
+                                    <th className="px-4 py-2 border">{t('Role')}</th>
                                     <th className="px-4 py-2 border">{t('Joined')}</th>
                                     <th className="px-4 py-2 border">{t('Actions')}</th>
                                 </tr>
@@ -176,6 +207,7 @@ const MyUsers: React.FC<NewPageProps> = ({ users }) => {
                                         <td className="px-4 py-2 border">{user.id}</td>
                                         <td className="px-4 py-2 border">{user.name}</td>
                                         <td className="px-4 py-2 border">{user.email}</td>
+                                        <td className="px-4 py-2 border">{user.role}</td>
                                         <td className="px-4 py-2 border">
                                             {new Date(user.created_at).toLocaleDateString()}
                                         </td>
