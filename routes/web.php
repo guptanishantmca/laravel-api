@@ -26,6 +26,11 @@ Route::get('/roles-and-permissions', [RolePermissionController::class, 'getRoles
     ->name('roles.permissions')
     ->middleware(['auth']);
 
+    Route::get('/roles/grouped-permissions', [RolePermissionController::class, 'getGroupedPermissions'])
+    ->name('roles.grouped-permissions')
+    ->middleware(['auth']);
+    Route::get('/roles/{roleId}/permissions', [RolePermissionController::class, 'getRolePermissions']);
+
 // Route to update role permissions
 Route::post('/roles/{role}/permissions', [RolePermissionController::class, 'updateRolePermissions'])
     ->name('roles.permissions.update')

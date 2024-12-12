@@ -93,12 +93,7 @@ export default function Authenticated({
                             >
                                  {t('my_users')} 
                             </NavLink>
-                            <NavLink
-                                href={route('roles.manage')}
-                                active={route().current('roles.manage')}
-                            >
-                                 {t('roles')} 
-                            </NavLink>
+                             
                         </div>
                     </div>
     
