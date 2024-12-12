@@ -31,4 +31,36 @@ class RolePermissionController extends Controller
 
         return response()->json(['message' => 'Permissions updated successfully']);
     }
+
+    public function getGroupedPermissions()
+    {
+        $permissions = Permission::all()->groupBy('group')->map(function ($group) {
+            return [
+                'group_name' => $group->first()->name ?? 'Unnamed Group', // Use the name of the first record in the group
+                'permissions' => $group->toArray() // Include all permissions in the group
+            ];
+        });
+
+        $roles = Role::all();
+
+        return response()->json([
+            'permissions' => $permissions,
+            'roles' => $roles,
+        ]);
+    }
+
+
+    public function getRolePermissions($roleId)
+    {
+        // Find the role
+        $role = Role::findOrFail($roleId);
+
+        // Get the permissions assigned to this role
+        $permissions = $role->permissions()->get();
+
+        return response()->json([
+            'permissions' => $permissions
+        ]);
+    }
+
 }

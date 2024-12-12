@@ -8,6 +8,7 @@ export default function Sidebar({
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar toggle state
     const [isUsersOpen, setIsUsersOpen] = useState(false);
     const [isReportsOpen, setIsReportsOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isSalesReportsOpen, setIsSalesReportsOpen] = useState(false);
     const { t } = useTranslation('sidenav');
     return (
@@ -166,9 +167,42 @@ export default function Sidebar({
                     </div>
 
                     {/* Settings Link */}
-                    <a href="/settings" className="block px-4 py-2 rounded hover:bg-gray-700">
+                    <div className="space-y-1">
+                        <button
+                            onClick={() => setIsSettingsOpen(!isReportsOpen)}
+                            className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-700"
+                        >
+                            <span>Settings</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className={`w-5 h-5 transform transition-transform ${
+                                    isReportsOpen ? 'rotate-180' : ''
+                                }`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M19 9l-7 7-7-7"
+                                />
+                            </svg>
+                        </button>
+                        {isSettingsOpen && (
+                            <div className="pl-6 space-y-1">
+                                 
+                                 <a href="/settings" className="block px-4 py-2 rounded hover:bg-gray-700">
                         Settings
                     </a>
+                                 <Link className='block px-4 py-2 rounded hover:bg-gray-700' href={route('roles.manage')}>
+                                 {t('roles')} 
+                                        </Link>
+                            </div>
+                        )}
+                    </div>
+                    
                 </nav>
 
                 {/* Logout */}
