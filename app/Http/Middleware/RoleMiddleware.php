@@ -17,7 +17,9 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, ...$roles)
     {
-        //$user = Auth::user();
+        if (!Auth::check()) {
+            return $next($request);
+        }
         $user = Auth::user();
         
         

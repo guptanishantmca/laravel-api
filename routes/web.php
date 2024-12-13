@@ -16,44 +16,45 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\RolePermissionController;
 
  
+Route::middleware('role_or_permission:Users')->group(function () {
+    Route::get('/roles/manage', function () {
+        return Inertia::render('RolePermissionManager');
+    })->middleware(['auth'])->name("roles.manage");
 
-Route::get('/roles/manage', function () {
-    return Inertia::render('RolePermissionManager');
-})->middleware(['auth'])->name("roles.manage");
 
+    Route::get('/roles-and-permissions', [RolePermissionController::class, 'getRolesAndPermissions'])
+        ->name('roles.permissions')
+        ->middleware(['auth']);
 
-Route::get('/roles-and-permissions', [RolePermissionController::class, 'getRolesAndPermissions'])
-    ->name('roles.permissions')
-    ->middleware(['auth']);
+        Route::get('/roles/grouped-permissions', [RolePermissionController::class, 'getGroupedPermissions'])
+        ->name('roles.grouped-permissions')
+        ->middleware(['auth']);
+        Route::get('/roles/{roleId}/permissions', [RolePermissionController::class, 'getRolePermissions']);
 
-    Route::get('/roles/grouped-permissions', [RolePermissionController::class, 'getGroupedPermissions'])
-    ->name('roles.grouped-permissions')
-    ->middleware(['auth']);
-    Route::get('/roles/{roleId}/permissions', [RolePermissionController::class, 'getRolePermissions']);
+    // Route to update role permissions
+    Route::post('/roles/{role}/permissions', [RolePermissionController::class, 'updateRolePermissions'])
+        ->name('roles.permissions.update')
+        ->middleware(['auth']);
 
-// Route to update role permissions
-Route::post('/roles/{role}/permissions', [RolePermissionController::class, 'updateRolePermissions'])
-    ->name('roles.permissions.update')
-    ->middleware(['auth']);
+    Route::get('/users', function () {
+        $users = User::with('roles')->get()->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->roles->pluck('name')->first(), // Assuming a single role per user
+                'created_at' => $user->created_at,
+            ];
+        });
 
-Route::get('/users', function () {
-    $users = User::with('roles')->get()->map(function ($user) {
-        return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'role' => $user->roles->pluck('name')->first(), // Assuming a single role per user
-            'created_at' => $user->created_at,
-        ];
-    });
+        $roles = Role::pluck('name');
 
-    $roles = Role::pluck('name');
-
-    return Inertia::render('MyUsers', [
-        'users' => $users,
-        'roles' => $roles,
-    ]);
-})->name('users');
+        return Inertia::render('MyUsers', [
+            'users' => $users,
+            'roles' => $roles,
+        ]);
+    })->name('users');
+});
 Route::middleware([SetLocale::class])->group(function () {
     Route::get('/', function () {
         return view('welcome');
