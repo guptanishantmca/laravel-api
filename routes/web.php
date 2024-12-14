@@ -15,13 +15,17 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\RolePermissionController;
 
- 
-Route::middleware('role_or_permission:Users')->group(function () {
+Route::group(['middleware' => ['role_or_permission:super admin']], function () {
+     
     Route::get('/roles/manage', function () {
         return Inertia::render('RolePermissionManager');
     })->middleware(['auth'])->name("roles.manage");
 
+});
 
+
+Route::middleware('role_or_permission:Users')->group(function () {
+    
     Route::get('/roles-and-permissions', [RolePermissionController::class, 'getRolesAndPermissions'])
         ->name('roles.permissions')
         ->middleware(['auth']);
