@@ -71,9 +71,8 @@ const RolePermissionManager: React.FC = () => {
                 </h2>
             }
         >
-            <div className="flex h-screen bg-gray-100">
-                {/* Sidebar */}
-                <Sidebar />
+            <Head title="Manage Roles and Permissions" />
+         
 
                 {/* Main Content */}
                 <div className="flex-1 p-6 overflow-auto">
@@ -135,7 +134,7 @@ const RolePermissionManager: React.FC = () => {
                         </button>
                     </div>
                 </div>
-            </div>
+             
         </AuthenticatedLayout>
 
     );
