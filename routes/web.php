@@ -15,7 +15,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\RolePermissionController;
 
-Route::group(['middleware' => ['role_or_permission:super admin']], function () {
+Route::group(['middleware' => ['role_or_permission:Settings|Permissions']], function () {
      
     Route::get('/roles/manage', function () {
         return Inertia::render('RolePermissionManager');
