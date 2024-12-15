@@ -19,9 +19,8 @@ const Dashboard: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespace
             }
         >
             <Head title="Dashboard" />
-            <div className="flex h-screen bg-gray-100">
-                {/* Sidebar */}
-                <Sidebar />
+           
+               
 
                 {/* Main Content */}
                 <div className="flex-1 p-6 overflow-auto">
@@ -31,7 +30,7 @@ const Dashboard: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespace
                         <p className="text-gray-600">{t('welcome_message')}</p>
                     </div>
                 </div>
-            </div>
+          
         </AuthenticatedLayout>
     );
 };

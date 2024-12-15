@@ -206,14 +206,14 @@ export default function Sidebar({
                 </nav>
 
                 {/* Logout */}
-                <div className="px-6 py-4">
+                {/* <div className="px-6 py-4">
                     <a
                         href="/logout"
                         className="block px-4 py-2 rounded bg-red-600 hover:bg-red-500 text-center"
                     >
                         Logout
                     </a>
-                </div>
+                </div> */}
             </aside>
 
             {/* Overlay for Mobile */}
