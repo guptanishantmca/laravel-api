@@ -20,6 +20,38 @@ interface AuthenticatedProps {
 interface Language {
     [key: string]: string; // Example: { en: 'English', es: 'Español' }
   }
+
+  const menuItems = [
+    {
+        label: 'Marketplace',
+        link: route('dashboard'),
+        children: []
+    },
+    {
+        label: 'My Business',
+        link: route('users'),
+        children: [
+            { label: 'All Users', link: route('users') },
+            { label: 'Create User', link: '/users/create' },
+        ]
+    },
+    {
+        label: 'Project Management',
+        link: route('dashboard'),
+        children: []
+    },
+    {
+        label: 'Reports',
+        link: '/reports',
+        children: [
+            { label: 'Sales Summary', link: '/reports/sales/summary' },
+            { label: 'Regional Sales', link: '/reports/sales/regions' },
+            { label: 'Audit Reports', link: '/reports/audit' },
+        ]
+    },
+    // Add more sections as needed
+];
+
   export default function AuthenticatedLayout({
     header, // Dynamic page-specific header
     children, // Dynamic page-specific content
@@ -33,7 +65,75 @@ interface Language {
 
     const user = usePage().props.auth.user;
     const { t } = useTranslation('header');
+    const [activeMenu, setActiveMenu] = useState<'dashboard' | 'users' | 'settings'>('dashboard');
 
+    const sidebarNavigation = {
+        dashboard: [
+            { name: t('Overview'), route: route('dashboard') },
+            { 
+                name: t('Reports'), 
+                children: [
+                    { name: t('Sales Reports'), route: route('users') },
+                    {
+                        name: t('Regional Reports'),
+                        children: [
+                            { name: t('Region 1'), route: route('dashboard') },
+                            { name: t('Region 2'), route: route('dashboard') },
+                        ],
+                    },
+                    { name: t('Audit Reports'), route: route('dashboard') },
+                ],
+            },
+        ],
+        users: [
+            { name: t('All Users'), route: route('users') },
+            { 
+                name: t('Roles'), 
+                children: [
+                    { name: t('Manage Roles'), route: route('roles.manage') },
+                    { name: t('Assign Permissions'), route: route('dashboard') },
+                ],
+            },
+        ],
+        settings: [
+            { name: t('Profile Settings'), route: route('dashboard') },
+            { 
+                name: t('Account Settings'), 
+                children: [
+                    { name: t('Change Password'), route: route('dashboard') },
+                    { name: t('Notification Preferences'), route: route('dashboard') },
+                ],
+            },
+        ],
+    };
+    
+    const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({}); // Expand/collapse state for multi-level items
+    const toggleExpand = (label: string) => {
+        setExpandedItems((prevState) => ({
+            ...prevState,
+            [label]: !prevState[label],
+        }));
+    };
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar toggle state
+
+    useEffect(() => {
+        // Define mapping of routes to menus
+        const menuMapping: Record<string, 'dashboard' | 'users' | 'settings'> = {
+            dashboard: 'dashboard',
+            users: 'users',
+            'roles.manage': 'users',
+            'settings.profile': 'settings',
+        };
+    
+        // Iterate through the menuMapping to determine the active menu
+        const currentRoute = Object.keys(menuMapping).find((routeKey) =>
+            route().current(routeKey)
+        );
+    
+        if (currentRoute && menuMapping[currentRoute]) {
+            setActiveMenu(menuMapping[currentRoute]); // Update active menu
+        }
+    }, []);
     return (
         <div className="min-h-screen flex bg-gray-100">
             {/* Sidebar */}
@@ -46,7 +146,83 @@ interface Language {
                 </div>
                 {/* Sidebar Navigation */}
                 <div className="flex-1">
-                    <Sidebar />
+                    {/* <Sidebar/> */}
+                    <div className="flex">
+                        <aside
+                className={`fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white transform ${
+                    isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                } transition-transform md:relative md:translate-x-0`}
+            >
+                <div className="px-6 py-4">
+                    <h1 className="text-xl font-bold">{activeMenu}</h1>
+                </div>
+                <nav className="flex-1 px-2 space-y-2">
+                {sidebarNavigation[activeMenu].map((item) => (
+    <div key={item.name} className="space-y-1">
+        {item.children ? (
+            <>
+                <button
+                    onClick={() => toggleExpand(item.name)}
+                    className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-700"
+                >
+                    <span>{t(item.name)}</span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`w-5 h-5 transform transition-transform ${
+                            expandedItems[item.name] ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M19 9l-7 7-7-7"
+                        />
+                    </svg>
+                </button>
+                {expandedItems[item.name] && (
+                    <div className="pl-6 space-y-1">
+                        {item.children.map((child) => (
+                            <Link
+                                key={child.name}
+                                href={child.route || '#'}
+                                className="block px-4 py-2 rounded hover:bg-gray-700"
+                            >
+                                {t(child.name)}
+                            </Link>
+                        ))}
+                    </div>
+                )}
+            </>
+        ) : (
+            <Link
+                href={item.route || '#'}
+                className="block px-4 py-2 rounded hover:bg-gray-700"
+            >
+                {t(item.name)}
+            </Link>
+        )}
+    </div>
+))}
+
+</nav>
+                </aside>
+                </div>
+                    {/* <nav>
+                        {sidebarNavigation[activeMenu].map((item) => (
+                            <NavLink
+                                key={item.name}
+                                href={item.route}
+                                active={route().current(item.route)}
+                                className="block px-4 py-2 text-gray-700 hover:bg-gray-300 rounded"
+                            >
+                                {item.name}
+                            </NavLink>
+                        ))}
+                    </nav> */}
                 </div>
             </aside>
 
@@ -54,16 +230,45 @@ interface Language {
             <div className="flex-1 flex flex-col">
                 {/* Header */}
                 <nav className="bg-white border-b border-gray-100">
-                    <div className="flex items-center justify-between px-6 h-16">
+                <div className="flex h-16 justify-between">
+                <div className="flex">
                         {/* Left Navigation Links */}
-                        <div className="flex items-center space-x-4">
-                            <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                {t('dashboard')}
+                        <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <button
+                                onClick={() => setActiveMenu('dashboard')}
+                                className={'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ' +`${ 
+                                    activeMenu === 'dashboard' ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700'
+                                }`}
+                            >
+                                {t('Dashboard')}
+                            </button>
+                            <button
+                                onClick={() => setActiveMenu('users')}
+                                className={'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ' +`${
+                                    activeMenu === 'users' ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700'
+                                }`}
+                            >
+                                {t('Users')}
+                            </button>
+                            <button
+                                onClick={() => setActiveMenu('settings')}
+                                className={'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ' +`${
+                                    activeMenu === 'settings' ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700'
+                                }`}
+                            >
+                                {t('Settings')}
+                            </button>
+                        {/* <NavLink  onClick={() => setActiveMenu('dashboard')} active={route().current('dashboard')}>
+                                {t('Marketplace')}
                             </NavLink>
-                            <NavLink href={route('users')} active={route().current('users')}>
-                                {t('my_users')}
+                            <NavLink  onClick={() => setActiveMenu('users')} active={route().current('users')}>
+                                {t('My Business')}
                             </NavLink>
-                        </div>
+                            <NavLink onClick={() => setActiveMenu('settings')} active={route().current('dashboard')}>
+                                {t('Project Management')}
+                            </NavLink> */}
+                             
+                            </div></div>
                         {/* Right User Dropdown */}
                         <div className="flex items-center space-x-4">
                             {/* Language Switcher */}
@@ -152,5 +357,3 @@ interface Language {
         </div>
     );
 }
-
-
