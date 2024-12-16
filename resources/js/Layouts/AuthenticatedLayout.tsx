@@ -68,6 +68,41 @@ interface Language {
                         <div className="flex items-center space-x-4">
                             {/* Language Switcher */}
                             <LanguageSwitcher currentNamespaces={currentNamespaces} />
+                              {/* Message Icon */}
+                        <button className="ml-6 text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <svg
+                                className="h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M3 8l7.89 5.26a3 3 0 003.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                />
+                            </svg>
+                        </button>
+    
+                        {/* Notification Icon */}
+                        <button className="ml-6 text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <svg
+                                className="h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11c0-2.21-1.343-4.004-3.284-4.74A2 2 0 0013 5V4a1 1 0 10-2 0v1a2 2 0 00-1.716 1.26C8.343 6.996 7 8.79 7 11v3.159c0 .415-.162.82-.451 1.119L5 17h5m0 0v1a3 3 0 006 0v-1m-6 0h6"
+                                />
+                            </svg>
+                        </button>
                             {/* User Dropdown */}
                             <Dropdown>
                                 <Dropdown.Trigger>
