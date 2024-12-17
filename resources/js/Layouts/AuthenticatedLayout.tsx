@@ -19,9 +19,9 @@ interface AuthenticatedProps {
 
 interface Language {
     [key: string]: string; // Example: { en: 'English', es: 'Español' }
-  }
+}
 
-  const menuItems = [
+const menuItems = [
     {
         label: 'Marketplace',
         link: route('dashboard'),
@@ -52,7 +52,7 @@ interface Language {
     // Add more sections as needed
 ];
 
-  export default function AuthenticatedLayout({
+export default function AuthenticatedLayout({
     header, // Dynamic page-specific header
     children, // Dynamic page-specific content
     currentNamespaces,
@@ -66,12 +66,14 @@ interface Language {
     const user = usePage().props.auth.user;
     const { t } = useTranslation('header');
     const [activeMenu, setActiveMenu] = useState<'dashboard' | 'users' | 'settings'>('dashboard');
-
+    const toggleSidebar = () => {
+        setIsSidebarOpen((prev) => !prev);
+    };
     const sidebarNavigation = {
         dashboard: [
             { name: t('Overview'), route: route('dashboard') },
-            { 
-                name: t('Reports'), 
+            {
+                name: t('Reports'),
                 children: [
                     { name: t('Sales Reports'), route: route('users') },
                     {
@@ -87,8 +89,8 @@ interface Language {
         ],
         users: [
             { name: t('All Users'), route: route('users') },
-            { 
-                name: t('Roles'), 
+            {
+                name: t('Roles'),
                 children: [
                     { name: t('Manage Roles'), route: route('roles.manage') },
                     { name: t('Assign Permissions'), route: route('dashboard') },
@@ -97,8 +99,8 @@ interface Language {
         ],
         settings: [
             { name: t('Profile Settings'), route: route('dashboard') },
-            { 
-                name: t('Account Settings'), 
+            {
+                name: t('Account Settings'),
                 children: [
                     { name: t('Change Password'), route: route('dashboard') },
                     { name: t('Notification Preferences'), route: route('dashboard') },
@@ -106,7 +108,7 @@ interface Language {
             },
         ],
     };
-    
+
     const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({}); // Expand/collapse state for multi-level items
     const toggleExpand = (label: string) => {
         setExpandedItems((prevState) => ({
@@ -124,197 +126,228 @@ interface Language {
             'roles.manage': 'users',
             'settings.profile': 'settings',
         };
-    
+
         // Iterate through the menuMapping to determine the active menu
         const currentRoute = Object.keys(menuMapping).find((routeKey) =>
             route().current(routeKey)
         );
-    
+
         if (currentRoute && menuMapping[currentRoute]) {
             setActiveMenu(menuMapping[currentRoute]); // Update active menu
         }
     }, []);
     return (
-        <div className="min-h-screen flex bg-gray-100">
+        
+        <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
             {/* Sidebar */}
-            <aside className="w-64 bg-gray-800 flex flex-col">
-                {/* Logo at the top */}
-                <div className="flex items-center justify-center p-4 border-b bg-white">
-                    <Link href="/">
-                        <ApplicationLogo className="block h-8 w-auto fill-current text-gray-800" />
-                    </Link>
-                </div>
-                {/* Sidebar Navigation */}
-                <div className="flex-1">
-                    {/* <Sidebar/> */}
-                    <div className="flex">
-                        <aside
+            <div
                 className={`fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white transform ${
                     isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 } transition-transform md:relative md:translate-x-0`}
             >
-                <div className="px-6 py-4">
-                    <h1 className="text-xl font-bold">{activeMenu}</h1>
-                </div>
-                <nav className="flex-1 px-2 space-y-2">
-                {sidebarNavigation[activeMenu].map((item) => (
-    <div key={item.name} className="space-y-1">
-        {item.children ? (
-            <>
-                <button
-                    onClick={() => toggleExpand(item.name)}
-                    className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-700"
-                >
-                    <span>{t(item.name)}</span>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`w-5 h-5 transform transition-transform ${
-                            expandedItems[item.name] ? 'rotate-180' : ''
-                        }`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 9l-7 7-7-7"
-                        />
-                    </svg>
-                </button>
-                {expandedItems[item.name] && (
-                    <div className="pl-6 space-y-1">
-                        {item.children.map((child) => (
-                            <Link
-                                key={child.name}
-                                href={child.route || '#'}
-                                className="block px-4 py-2 rounded hover:bg-gray-700"
+                <div className="flex items-center justify-center p-4 border-b bg-white">
+                     <Link href="/">
+                         <ApplicationLogo className="block h-8 w-auto fill-current text-gray-800" />
+                     </Link>
+                 </div>
+                <nav className="px-4 space-y-2">
+                     {/* Mobile Top Navigation */}
+                        
+                     <div className="md:hidden">
+                     <div  className="space-y-1">
+                            <button
+                                onClick={() => setActiveMenu('dashboard')}
+                                className={`block px-4 py-2 rounded hover:bg-gray-700 ${
+                                    activeMenu === 'dashboard'
+                                        ? ''
+                                        : ''
+                                }`}
                             >
-                                {t(child.name)}
-                            </Link>
-                        ))}
-                    </div>
-                )}
-            </>
-        ) : (
-            <Link
-                href={item.route || '#'}
-                className="block px-4 py-2 rounded hover:bg-gray-700"
-            >
-                {t(item.name)}
-            </Link>
-        )}
-    </div>
-))}
+                                {t('Dashboard')}
+                            </button>
+                            </div>
+                            <div  className="space-y-1">
+                            <button
+                                onClick={() => setActiveMenu('users')}
+                                className={`block px-4 py-2 rounded hover:bg-gray-700 ${
+                                    activeMenu === 'users'
+                                          ? ''
+                                        : ''
+                                }`}
+                            >
+                                {t('Users')}
+                            </button>
+                            </div>
+                            <div  className="space-y-1">
+                            <button
+                                onClick={() => setActiveMenu('settings')}
+                                className={`block px-4 py-2 rounded hover:bg-gray-700 ${
+                                    activeMenu === 'settings'
+                                         ? ''
+                                        : ''
+                                }`}
+                            >
+                                {t('Settings')}
+                            </button>
+                            </div>
+                        </div>
+                        {/* Mobile Top Navigation */}
+                                 {sidebarNavigation[activeMenu].map((item) => (
+                                    <div key={item.name} className="space-y-1">
+                                        {item.children ? (
+                                            <>
+                                                <button
+                                                    onClick={() => toggleExpand(item.name)}
+                                                    className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-700"
+                                                >
+                                                    <span>{t(item.name)}</span>
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className={`w-5 h-5 transform transition-transform ${expandedItems[item.name] ? 'rotate-180' : ''
+                                                            }`}
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M19 9l-7 7-7-7"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                                {expandedItems[item.name] && (
+                                                    <div className="pl-6 space-y-1">
+                                                        {item.children.map((child) => (
+                                                            <Link
+                                                                key={child.name}
+                                                                href={child.route || '#'}
+                                                                className="block px-4 py-2 rounded hover:bg-gray-700"
+                                                            >
+                                                                {t(child.name)}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <Link
+                                                href={item.route || '#'}
+                                                className="block px-4 py-2 rounded hover:bg-gray-700"
+                                            >
+                                                {t(item.name)}
+                                            </Link>
+                                        )}
+                                    </div>
+                                ))}
 
-</nav>
-                </aside>
-                </div>
-                    {/* <nav>
-                        {sidebarNavigation[activeMenu].map((item) => (
-                            <NavLink
-                                key={item.name}
-                                href={item.route}
-                                active={route().current(item.route)}
-                                className="block px-4 py-2 text-gray-700 hover:bg-gray-300 rounded"
-                            >
-                                {item.name}
-                            </NavLink>
-                        ))}
-                    </nav> */}
-                </div>
-            </aside>
+                            </nav>
+                
+            </div>
+
+            {/* Mobile Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
+                    onClick={toggleSidebar}
+                ></div>
+            )}
 
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col">
                 {/* Header */}
-                <nav className="bg-white border-b border-gray-100">
-                <div className="flex h-16 justify-between">
-                <div className="flex">
-                        {/* Left Navigation Links */}
-                        <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <nav className="bg-white border-b border-gray-200">
+                    <div className="px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+                        {/* Mobile Sidebar Toggle */}
                         <button
+                            onClick={toggleSidebar}
+                            className="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none"
+                        >
+                            <svg
+                                className="h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
+                            </svg>
+                        </button>
+
+                        {/* Desktop Navigation */}
+                        <div className="hidden md:flex flex h-16 space-x-8">
+                            <button
                                 onClick={() => setActiveMenu('dashboard')}
-                                className={'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ' +`${ 
-                                    activeMenu === 'dashboard' ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700'
+                                className={`text-sm font-medium ${
+                                    activeMenu === 'dashboard'
+                                        ? 'text-gray-900 border-b-2 border-indigo-500'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
                                 {t('Dashboard')}
                             </button>
                             <button
                                 onClick={() => setActiveMenu('users')}
-                                className={'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ' +`${
-                                    activeMenu === 'users' ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700'
+                                className={`text-sm font-medium ${
+                                    activeMenu === 'users'
+                                        ? 'text-gray-900 border-b-2 border-indigo-500'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
                                 {t('Users')}
                             </button>
                             <button
                                 onClick={() => setActiveMenu('settings')}
-                                className={'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ' +`${
-                                    activeMenu === 'settings' ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700'
+                                className={`text-sm font-medium ${
+                                    activeMenu === 'settings'
+                                        ? 'text-gray-900 border-b-2 border-indigo-500'
+                                        : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
                                 {t('Settings')}
                             </button>
-                        {/* <NavLink  onClick={() => setActiveMenu('dashboard')} active={route().current('dashboard')}>
-                                {t('Marketplace')}
-                            </NavLink>
-                            <NavLink  onClick={() => setActiveMenu('users')} active={route().current('users')}>
-                                {t('My Business')}
-                            </NavLink>
-                            <NavLink onClick={() => setActiveMenu('settings')} active={route().current('dashboard')}>
-                                {t('Project Management')}
-                            </NavLink> */}
-                             
-                            </div></div>
-                        {/* Right User Dropdown */}
+                        </div>
+
+                       
+
+
+
+                        {/* Right Icons */}
                         <div className="flex items-center space-x-4">
                             {/* Language Switcher */}
                             <LanguageSwitcher currentNamespaces={currentNamespaces} />
-                              {/* Message Icon */}
-                        <button className="ml-6 text-gray-500 hover:text-gray-700 focus:outline-none">
-                            <svg
-                                className="h-6 w-6"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M3 8l7.89 5.26a3 3 0 003.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                />
-                            </svg>
-                        </button>
-    
-                        {/* Notification Icon */}
-                        <button className="ml-6 text-gray-500 hover:text-gray-700 focus:outline-none">
-                            <svg
-                                className="h-6 w-6"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11c0-2.21-1.343-4.004-3.284-4.74A2 2 0 0013 5V4a1 1 0 10-2 0v1a2 2 0 00-1.716 1.26C8.343 6.996 7 8.79 7 11v3.159c0 .415-.162.82-.451 1.119L5 17h5m0 0v1a3 3 0 006 0v-1m-6 0h6"
-                                />
-                            </svg>
-                        </button>
+
+                            {/* Notifications */}
+                            <button className="text-gray-500 hover:text-gray-700">
+                                <svg
+                                    className="h-6 w-6"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11c0-2.21-1.343-4.004-3.284-4.74A2 2 0 0013 5V4a1 1 0 10-2 0v1a2 2 0 00-1.716 1.26C8.343 6.996 7 8.79 7 11v3.159c0 .415-.162.82-.451 1.119L5 17h5"
+                                    />
+                                </svg>
+                            </button>
+
                             {/* User Dropdown */}
                             <Dropdown>
                                 <Dropdown.Trigger>
-                                    <button className="inline-flex items-center">
+                                    <button className="flex items-center text-sm font-medium text-gray-700 focus:outline-none">
                                         {user.name}
                                         <svg
-                                            className="ml-2 h-4 w-4"
+                                            className="ml-1 h-4 w-4"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 20 20"
                                             fill="currentColor"
@@ -329,14 +362,10 @@ interface Language {
                                 </Dropdown.Trigger>
                                 <Dropdown.Content>
                                     <Dropdown.Link href={route('profile.edit')}>
-                                        {t('profile')}
+                                        {t('Profile')}
                                     </Dropdown.Link>
-                                    <Dropdown.Link
-                                        href={route('logout')}
-                                        method="post"
-                                        as="button"
-                                    >
-                                        {t('logout')}
+                                    <Dropdown.Link href={route('logout')} method="post" as="button">
+                                        {t('Logout')}
                                     </Dropdown.Link>
                                 </Dropdown.Content>
                             </Dropdown>
@@ -344,15 +373,8 @@ interface Language {
                     </div>
                 </nav>
 
-                {/* Main Section */}
-                <main className="flex-1 p-6">
-                    {/* {header && (
-                        <header className="mb-4 bg-white shadow">
-                            <div className="px-4 py-6">{header}</div>
-                        </header>
-                    )} */}
-                    {children}
-                </main>
+                {/* Main Content */}
+                <main className="flex-1 p-6 bg-gray-50">{children}</main>
             </div>
         </div>
     );
