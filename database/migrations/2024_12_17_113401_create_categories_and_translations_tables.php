@@ -17,6 +17,7 @@ class CreateCategoriesAndTranslationsTables extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id(); // Auto-increment primary key
             $table->foreignId('parent_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->string('slug');
             $table->enum('type', ['Material', 'Work'])->default('Material');
             $table->timestamps(); // created_at and updated_at columns
         });
