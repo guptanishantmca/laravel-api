@@ -21,36 +21,7 @@ interface Language {
     [key: string]: string; // Example: { en: 'English', es: 'Español' }
 }
 
-const menuItems = [
-    {
-        label: 'Marketplace',
-        link: route('dashboard'),
-        children: []
-    },
-    {
-        label: 'My Business',
-        link: route('users'),
-        children: [
-            { label: 'All Users', link: route('users') },
-            { label: 'Create User', link: '/users/create' },
-        ]
-    },
-    {
-        label: 'Project Management',
-        link: route('dashboard'),
-        children: []
-    },
-    {
-        label: 'Reports',
-        link: '/reports',
-        children: [
-            { label: 'Sales Summary', link: '/reports/sales/summary' },
-            { label: 'Regional Sales', link: '/reports/sales/regions' },
-            { label: 'Audit Reports', link: '/reports/audit' },
-        ]
-    },
-    // Add more sections as needed
-];
+ 
 
 export default function AuthenticatedLayout({
     header, // Dynamic page-specific header
@@ -65,45 +36,110 @@ export default function AuthenticatedLayout({
 
     const user = usePage().props.auth.user;
     const { t } = useTranslation('header');
-    const [activeMenu, setActiveMenu] = useState<'dashboard' | 'users' | 'settings'>('dashboard');
+    const [activeMenu, setActiveMenu] = useState<'marketplace' | 'my_business' | 'project_management'| 'settings'>('marketplace');
     const toggleSidebar = () => {
         setIsSidebarOpen((prev) => !prev);
     };
     const sidebarNavigation = {
-        dashboard: [
-            { name: t('Overview'), route: route('dashboard') },
+        marketplace: [
+            { name: t('dashboard'), route: route('dashboard') },
+            { name: t('feeds'), route: route('dashboard') },
             {
-                name: t('Reports'),
+                name: t('materials'),
                 children: [
-                    { name: t('Sales Reports'), route: route('users') },
-                    {
-                        name: t('Regional Reports'),
-                        children: [
-                            { name: t('Region 1'), route: route('dashboard') },
-                            { name: t('Region 2'), route: route('dashboard') },
-                        ],
-                    },
-                    { name: t('Audit Reports'), route: route('dashboard') },
+                    { name: t('create'), route: route('users') },
+                     
+                    { name: t('manage'), route: route('dashboard') },
+                ],
+            },{
+                name: t('work'),
+                children: [
+                    { name: t('create'), route: route('users') },
+                     
+                    { name: t('manage'), route: route('dashboard') },
                 ],
             },
+            { name: t('my_action'), route: route('dashboard') },
+            { name: t('saved_jobs'), route: route('dashboard') },
+            // {
+            //     name: t('Reports'),
+            //     children: [
+            //         { name: t('Sales Reports'), route: route('users') },
+            //         {
+            //             name: t('Regional Reports'),
+            //             children: [
+            //                 { name: t('Region 1'), route: route('dashboard') },
+            //                 { name: t('Region 2'), route: route('dashboard') },
+            //             ],
+            //         },
+            //         { name: t('Audit Reports'), route: route('dashboard') },
+            //     ],
+            // },
         ],
-        users: [
+        my_business: [
+            { name: t('files'),
+                children: [
+                    { name: t('Add New'), route: route('roles.manage') },
+                    
+                ],
+            },
+            { name: t('Client'),
+                children: [
+                    { name: t('Add New'), route: route('roles.manage') },
+                    { name: t('manage'), route: route('dashboard') },
+                    
+                ],
+            },
+            { name: t('Offer'),
+                children: [
+                    { name: t('Create'), route: route('roles.manage') },
+                    { name: t('manage'), route: route('dashboard') },
+                    
+                ],
+            },
+            { name: t('Template'),
+                children: [
+                    { name: t('Create'), route: route('roles.manage') },
+                    { name: t('manage'), route: route('dashboard') },
+                    
+                ],
+            },
+            { name: t('Contract'),
+                children: [
+                    { name: t('Create'), route: route('roles.manage') },
+                    { name: t('manage'), route: route('dashboard') },
+                    
+                ],
+            },
+            { name: t('Invoice'),
+                children: [
+                    { name: t('Create'), route: route('roles.manage') },
+                    { name: t('manage'), route: route('dashboard') },
+                    
+                ],
+            },
+            { name: t('Report'),
+                children: [
+                    { name: t('Create'), route: route('roles.manage') },
+                    { name: t('manage'), route: route('dashboard') },
+                    
+                ],
+            },
+             
+        ],
+        project_management: [
+            { name: t('Create'), route: route('dashboard') },
+            { name: t('manage'), route: route('dashboard') },
+            { name: t('Archive Project'), route: route('dashboard') },
+             
+        ],
+        settings: [
             { name: t('All Users'), route: route('users') },
             {
                 name: t('Roles'),
                 children: [
                     { name: t('Manage Roles'), route: route('roles.manage') },
                     { name: t('Assign Permissions'), route: route('dashboard') },
-                ],
-            },
-        ],
-        settings: [
-            { name: t('Profile Settings'), route: route('dashboard') },
-            {
-                name: t('Account Settings'),
-                children: [
-                    { name: t('Change Password'), route: route('dashboard') },
-                    { name: t('Notification Preferences'), route: route('dashboard') },
                 ],
             },
         ],
@@ -120,10 +156,11 @@ export default function AuthenticatedLayout({
 
     useEffect(() => {
         // Define mapping of routes to menus
-        const menuMapping: Record<string, 'dashboard' | 'users' | 'settings'> = {
-            dashboard: 'dashboard',
-            users: 'users',
-            'roles.manage': 'users',
+        const menuMapping: Record<string, 'marketplace' | 'my_business' | 'project_management' | 'settings'> = {
+            marketplace: 'marketplace',
+            my_business: 'my_business',
+            project_management: 'project_management',
+            'roles.manage': 'settings',
             'settings.profile': 'settings',
         };
 
@@ -156,26 +193,38 @@ export default function AuthenticatedLayout({
                      <div className="md:hidden">
                      <div  className="space-y-1">
                             <button
-                                onClick={() => setActiveMenu('dashboard')}
+                                onClick={() => setActiveMenu('marketplace')}
                                 className={`block px-4 py-2 rounded hover:bg-gray-700 ${
-                                    activeMenu === 'dashboard'
+                                    activeMenu === 'marketplace'
                                         ? ''
                                         : ''
                                 }`}
                             >
-                                {t('Dashboard')}
+                                {t('marketplace')}
                             </button>
                             </div>
                             <div  className="space-y-1">
                             <button
-                                onClick={() => setActiveMenu('users')}
+                                onClick={() => setActiveMenu('my_business')}
                                 className={`block px-4 py-2 rounded hover:bg-gray-700 ${
-                                    activeMenu === 'users'
+                                    activeMenu === 'my_business'
                                           ? ''
                                         : ''
                                 }`}
                             >
-                                {t('Users')}
+                                {t('my_business')}
+                            </button>
+                            </div>
+                            <div  className="space-y-1">
+                            <button
+                                onClick={() => setActiveMenu('project_management')}
+                                className={`block px-4 py-2 rounded hover:bg-gray-700 ${
+                                    activeMenu === 'project_management'
+                                         ? ''
+                                        : ''
+                                }`}
+                            >
+                                {t('project_management')}
                             </button>
                             </div>
                             <div  className="space-y-1">
@@ -187,11 +236,14 @@ export default function AuthenticatedLayout({
                                         : ''
                                 }`}
                             >
-                                {t('Settings')}
+                                {t('settings')}
                             </button>
                             </div>
                         </div>
                         {/* Mobile Top Navigation */}
+                        <div className="px-6 py-4">
+                            <h1 className="text-xl font-bold">{t(activeMenu)}</h1>
+                        </div>
                                  {sidebarNavigation[activeMenu].map((item) => (
                                     <div key={item.name} className="space-y-1">
                                         {item.children ? (
@@ -283,24 +335,34 @@ export default function AuthenticatedLayout({
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex flex h-16 space-x-8">
                             <button
-                                onClick={() => setActiveMenu('dashboard')}
+                                onClick={() => setActiveMenu('marketplace')}
                                 className={`text-sm font-medium ${
-                                    activeMenu === 'dashboard'
+                                    activeMenu === 'marketplace'
                                         ? 'text-gray-900 border-b-2 border-indigo-500'
                                         : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
-                                {t('Dashboard')}
+                                {t('marketplace')}
                             </button>
                             <button
-                                onClick={() => setActiveMenu('users')}
+                                onClick={() => setActiveMenu('my_business')}
                                 className={`text-sm font-medium ${
-                                    activeMenu === 'users'
+                                    activeMenu === 'my_business'
                                         ? 'text-gray-900 border-b-2 border-indigo-500'
                                         : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
-                                {t('Users')}
+                                {t('my_business')}
+                            </button>
+                            <button
+                                onClick={() => setActiveMenu('project_management')}
+                                className={`text-sm font-medium ${
+                                    activeMenu === 'project_management'
+                                        ? 'text-gray-900 border-b-2 border-indigo-500'
+                                        : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                            >
+                                {t('project_management')}
                             </button>
                             <button
                                 onClick={() => setActiveMenu('settings')}
@@ -310,7 +372,7 @@ export default function AuthenticatedLayout({
                                         : 'text-gray-500 hover:text-gray-700'
                                 }`}
                             >
-                                {t('Settings')}
+                                {t('settings')}
                             </button>
                         </div>
 
