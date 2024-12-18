@@ -14,7 +14,7 @@ const useLoadNamespaces = (namespaces: string[]) => {
                 for (const ns of namespaces) {
                     if (!i18n.hasResourceBundle(i18n.language, ns)) {
                         // Dynamically import translations
-                        const translations = await import(`../assets/locales/${i18n.language}/${ns}.json`);
+                        const translations = await import(`../i18n/${i18n.language}/${ns}.json`);
                         i18n.addResourceBundle(i18n.language, ns, translations, true, true);
                     }
                 }
