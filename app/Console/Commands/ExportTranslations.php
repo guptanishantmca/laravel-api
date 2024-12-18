@@ -30,7 +30,7 @@ class ExportTranslations extends Command
         $languages = ['en', 'fi']; // Add more languages if needed
 
         // Define the output directory for the React app
-        $outputPath = resource_path('../resources/js/assets/locales'); // Adjust the path to your React app
+        $outputPath = resource_path('../resources/js/i18n'); // Adjust the path to your React app
 
         foreach ($languages as $language) {
             $this->exportLanguage($language, $outputPath);
