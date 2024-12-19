@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client';
 import i18n, { setInitialLocale } from './i18n'; // i18n setup
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { I18nextProvider } from 'react-i18next';
+import { I18nextProvider } from 'react-i18next'; 
 
 
 
