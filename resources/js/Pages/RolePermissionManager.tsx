@@ -78,7 +78,7 @@ const RolePermissionManager: React.FC = () => {
                 <div className="flex-1 p-6 overflow-auto">
                     {/* Card Wrapper */}
                     <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                        <h1 className="text-2xl font-bold mb-4">Manage Role Permissions</h1>
+                        <h1 className="text-2xl font-bold mb-4">Manage Role Permissions</h1> 
 
                         {/* Role Selection */}
                         <div className="mb-4">
