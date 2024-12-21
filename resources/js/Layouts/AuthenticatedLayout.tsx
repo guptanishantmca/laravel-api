@@ -47,9 +47,9 @@ export default function AuthenticatedLayout({
             {
                 name: t('materials'),
                 children: [
-                    { name: t('create'), route: route('users') },
+                    { name: t('create'), route: route('materials.create') },
                      
-                    { name: t('manage'), route: route('dashboard') },
+                    { name: t('manage'), route: route('materials.create') },
                 ],
             },{
                 name: t('work'),
