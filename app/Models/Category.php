@@ -23,4 +23,11 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+    public function translation()
+    {
+        $locale = app()->getLocale();
+        return $this->hasOne(CategoryTranslation::class)
+            ->where('locale', $locale)
+            ->orWhere('locale', config('app.fallback_locale')); // Fallback locale
+    }
 }

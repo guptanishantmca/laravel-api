@@ -8,7 +8,7 @@ class StoreMaterialRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id'],
+             
             'type' => ['required', 'in:Request,Offer'],
             'title' => ['required', 'string', 'max:200'],
             'category_id' => ['nullable', 'exists:categories,id'],

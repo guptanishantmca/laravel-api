@@ -23,7 +23,7 @@ const Create: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }
                     }
                 >
         <div>
-            <h1>Create Material</h1>
+             
             <MaterialForm material={null} onSubmit={handleSubmit} />
         </div></AuthenticatedLayout>
     );
