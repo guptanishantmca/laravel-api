@@ -23,4 +23,13 @@ class State extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function translation()
+    {
+        $locale = app()->getLocale();
+        return $this->hasOne(StateTranslation::class)
+            ->where('locale', $locale)
+            ->orWhere('locale', config('app.fallback_locale')); // Fallback locale
+    }
+
 }

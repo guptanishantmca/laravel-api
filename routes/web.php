@@ -15,11 +15,16 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\MaterialController; 
+use App\Http\Controllers\LocationController; 
+use App\Http\Controllers\CategoryController; 
+Route::get('/countries', [LocationController::class, 'getCountries']);
+Route::get('/states/{country_id}', [LocationController::class, 'getStates']);
+Route::get('/categories', [CategoryController::class, 'getCategories']);
 
 Route::middleware(['auth'])->prefix('marketplace/materials')->name('materials.')->group(function () {
     Route::get('/', [MaterialController::class, 'index'])->name('index');
     Route::get('/create', [MaterialController::class, 'create'])->name('create');
-    Route::post('/', [MaterialController::class, 'store'])->name('store');
+    Route::post('/store', [MaterialController::class, 'store'])->name('store');
     Route::get('/{material}/edit', [MaterialController::class, 'edit'])->name('edit');
     Route::put('/{material}', [MaterialController::class, 'update'])->name('update');
 });

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreMaterialRequest;
 use App\Http\Requests\UpdateMaterialRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class MaterialController extends Controller
 {
@@ -29,10 +30,14 @@ class MaterialController extends Controller
     // Store Material
     public function store(StoreMaterialRequest $request)
     {
-        Material::create($request->validated());
+        
+        $validated = $request->validated();
 
-        return redirect()->route('materials.index')
-            ->with('success', 'Material created successfully.');
+        // Assign user_id from the authenticated user
+        $validated['user_id'] = Auth::id();
+        $validated['category_type'] = 'Material';
+        Material::create($validated);
+        return response()->json(['message' => 'Material created successfully'], 201);
     }
 
     // Show Edit Form
