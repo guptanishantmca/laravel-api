@@ -54,24 +54,32 @@ Route::middleware('role_or_permission:Users')->group(function () {
         ->name('roles.permissions.update')
         ->middleware(['auth']);
 
-    Route::get('/users', function () {
-        $users = User::with('roles')->get()->map(function ($user) {
-            return [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->roles->pluck('name')->first(), // Assuming a single role per user
-                'created_at' => $user->created_at,
-            ];
+
+
+        Route::middleware(['auth'])->group(function () {
+            Route::get('/users', [UserController::class, 'index'])->name('users');
+            
         });
 
-        $roles = Role::pluck('name');
 
-        return Inertia::render('MyUsers', [
-            'users' => $users,
-            'roles' => $roles,
-        ]);
-    })->name('users');
+    // Route::get('/users', function () {
+    //     $users = User::with('roles')->get()->map(function ($user) {
+    //         return [
+    //             'id' => $user->id,
+    //             'name' => $user->name,
+    //             'email' => $user->email,
+    //             'role' => $user->roles->pluck('name')->first(), // Assuming a single role per user
+    //             'created_at' => $user->created_at,
+    //         ];
+    //     });
+
+    //     $roles = Role::pluck('name');
+
+    //     return Inertia::render('MyUsers', [
+    //         'users' => $users,
+    //         'roles' => $roles,
+    //     ]);
+    // })->name('users');
 });
 Route::middleware([SetLocale::class])->group(function () {
     Route::get('/', function () {

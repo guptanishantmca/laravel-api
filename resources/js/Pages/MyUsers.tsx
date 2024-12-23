@@ -5,23 +5,51 @@ import { Head, useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import Table from '@/Components/Table';
+import Pagination from '@/Components/common/Pagination';
+interface Role {
+    id: number;
+    name: string;
+    guard_name: string;
+    created_at: string;
+    updated_at: string;
+    pivot: {
+        model_type: string;
+        model_id: number;
+        role_id: number;
+    };
+}
 
 interface User {
     id: number;
     name: string;
     email: string;
-    role: string; // Add role property
+    role: string; // You can keep this if some users might have a single role
     created_at: string;
+    roles: Role[]; // Add roles as an array of Role objects
 }
 
+interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
+interface PaginationProps {
+    links: PaginationLink[];
+}
 interface NewPageProps {
-    users: User[];
+    users: {
+        data: User[]; // Paginated users
+        links: PaginationLink[]; // Pagination links
+        total: number; // Total users count
+    };
     roles: string[]; // List of available roles
     currentNamespaces: string[];
 }
 
-const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
 
+const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
+console.log('user',users);
     const { t } = useTranslation('users');
     const isLoaded = useLoadNamespaces(['users']);
     const [showForm, setShowForm] = useState(false);
@@ -65,7 +93,7 @@ const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
         setData({
             name: user.name,
             email: user.email,
-            role: user.role, // Populate role for editing
+            role: user.roles.length > 0 ? user.roles[0].name : '', 
         });
         setCurrentUserId(user.id);
         setIsEditing(true);
@@ -228,12 +256,14 @@ const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.map((user) => (
+                                {users?.data?.length > 0 ? (
+                                    users.data.map((user: any) => (
+                                    
                                         <tr key={user.id}>
                                             <td className="px-4 py-2 border">{user.id}</td>
                                             <td className="px-4 py-2 border">{user.name}</td>
                                             <td className="px-4 py-2 border">{user.email}</td>
-                                            <td className="px-4 py-2 border">{user.role}</td>
+                                            <td className="px-4 py-2 border">{user.roles.length > 0 ? user.roles.map((role: Role) => role.name).join(', ') : t('No Role Assigned')}</td>
                                             <td className="px-4 py-2 border">
                                                 {new Date(user.created_at).toLocaleDateString()}
                                             </td>
@@ -252,9 +282,15 @@ const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
                                                 </button>
                                             </td>
                                         </tr>
-                                    ))}
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={5}>{t('no_user_found')}</td>
+                                    </tr>
+                                )}
                                 </tbody>
                             </table>
+                            <Pagination links={users.links} total={users.total} />
                         </div>
                     </div>
                 </div>
