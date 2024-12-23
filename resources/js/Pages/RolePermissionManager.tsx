@@ -7,12 +7,16 @@ import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import axios from 'axios';
 interface Permission {
 
-    group_name: string;
+    
     id: number;
     name: string;
     group: number;
 }
-
+interface GroupedPermission {
+    group_name: string;
+    permissions: Permission[];
+}
+type Permissions = { [key: number]: GroupedPermission };
 interface Role {
     id: number;
     name: string;
@@ -22,7 +26,7 @@ const RolePermissionManager: React.FC = () => {
 
 
 
-    const [permissions, setPermissions] = useState<{ [key: number]: Permission[] }>({});
+    const [permissions, setPermissions] = useState<Permissions>({});
     const [roles, setRoles] = useState<Role[]>([]);
     const [selectedRole, setSelectedRole] = useState<number | null>(null);
     const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
@@ -96,31 +100,30 @@ const RolePermissionManager: React.FC = () => {
 
                         {/* Permissions */}
                         <div className="mb-6">
-                            {Object.keys(permissions).map(function (groupId) {
-                                const group = permissions[parseInt(groupId)];
-                                 
-                                return (
-                                    <div key={groupId} className="mb-4">
-                                        <h2 className="font-semibold text-lg mb-2">
-                                            {group.group_name || 'Unnamed Group'}:
-                                        </h2>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            {(group.permissions || []).map(function (permission:any) {
-                                                return (
-                                                    <label key={permission.id} className="flex items-center">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedPermissions.includes(permission.id)}
-                                                            onChange={() => togglePermission(permission.id)}
-                                                            className="mr-2" />
-                                                        {permission.name}
-                                                    </label>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                        {Object.keys(permissions).map((groupId) => {
+    const group = permissions[parseInt(groupId)];
+    return (
+        <div key={groupId} className="mb-4">
+            <h2 className="font-semibold text-lg mb-2">
+                {group.group_name || 'Unnamed Group'}:
+            </h2>
+            <div className="grid grid-cols-2 gap-4">
+                {group.permissions.map((permission) => (
+                    <label key={permission.id} className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={selectedPermissions.includes(permission.id)}
+                            onChange={() => togglePermission(permission.id)}
+                            className="mr-2"
+                        />
+                        {permission.name}
+                    </label>
+                ))}
+            </div>
+        </div>
+    );
+})}
+
                         </div>
 
                         {/* Save Button */}
