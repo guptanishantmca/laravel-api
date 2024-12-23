@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import {  usePage, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
@@ -8,7 +8,9 @@ import { Head } from '@inertiajs/react';
 const Index: React.FC<{ currentNamespaces: string[]; materials: any }> = ({ currentNamespaces, materials }) => {
     const { t } = useTranslation('dashboard'); // Use the 'dashboard' namespace
     useLoadNamespaces(['dashboard']);
- 
+    const { props } = usePage();
+    //const materials = props.materials.data;
+    const pagination = props.materials;
     return (
         <AuthenticatedLayout
             currentNamespaces={currentNamespaces}
@@ -66,6 +68,19 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: any }> = ({ curr
                      
                                 </tbody>
                             </table>
+                            {/* Pagination Links */}
+            <div className="flex space-x-2 mt-4">
+                {pagination.links.map((link: any, index: number) => (
+                    <Link
+                        key={index}
+                        href={link.url || '#'}
+                        className={`px-4 py-2 border rounded ${
+                            link.active ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                        }`}
+                        dangerouslySetInnerHTML={{ __html: link.label }}
+                    />
+                ))}
+            </div>
                         </div>
                     </div>
                 </div>
