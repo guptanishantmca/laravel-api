@@ -33,7 +33,7 @@ const RolePermissionManager: React.FC = () => {
             setRoles(response.data.roles);
         });
     }, []);
-
+ 
     const handleRoleChange = (roleId: number) => {
         setSelectedRole(roleId);
         // Fetch the permissions assigned to the selected role
@@ -65,12 +65,9 @@ const RolePermissionManager: React.FC = () => {
     return (
         <AuthenticatedLayout
             currentNamespaces={['users']}
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Manage Role Permissions
-                </h2>
-            }
-        >
+            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
+                Manage Role Permissions
+            </h2>} items={[]}        >
             <Head title="Manage Roles and Permissions" />
          
 
@@ -101,13 +98,14 @@ const RolePermissionManager: React.FC = () => {
                         <div className="mb-6">
                             {Object.keys(permissions).map(function (groupId) {
                                 const group = permissions[parseInt(groupId)];
+                                 
                                 return (
                                     <div key={groupId} className="mb-4">
                                         <h2 className="font-semibold text-lg mb-2">
                                             {group.group_name || 'Unnamed Group'}:
                                         </h2>
                                         <div className="grid grid-cols-2 gap-4">
-                                            {(group.permissions || []).map(function (permission) {
+                                            {(group.permissions || []).map(function (permission:any) {
                                                 return (
                                                     <label key={permission.id} className="flex items-center">
                                                         <input

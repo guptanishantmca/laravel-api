@@ -110,12 +110,9 @@ const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
     return (
         <AuthenticatedLayout
             currentNamespaces={['users']}
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {t('title')}
-                </h2>
-            }
-        >
+            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
+                {t('title')}
+            </h2>} items={[]}        >
             
            
                 

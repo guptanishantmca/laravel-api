@@ -15,13 +15,10 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
 
     return (
         <AuthenticatedLayout
-                    currentNamespaces={currentNamespaces}
-                    header={
-                        <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                            {t('dashboard')} {/* Ensure 'dashboard' key exists in translations */}
-                        </h2>
-                    }
-                ><div>
+            currentNamespaces={currentNamespaces}
+            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
+                {t('dashboard')} {/* Ensure 'dashboard' key exists in translations */}
+            </h2>} items={[]}                ><div>
             <h1>Edit Material</h1>
             <MaterialForm material={material} onSubmit={handleSubmit} />
         </div></AuthenticatedLayout>

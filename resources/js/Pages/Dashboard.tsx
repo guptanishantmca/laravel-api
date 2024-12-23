@@ -12,12 +12,9 @@ const Dashboard: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespace
     return (
         <AuthenticatedLayout
             currentNamespaces={['dashboard']}
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {t('dashboard')}
-                </h2>
-            }
-        >
+            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
+                {t('dashboard')}
+            </h2>} items={[]}        >
             <Head title="Dashboard" />
            
                

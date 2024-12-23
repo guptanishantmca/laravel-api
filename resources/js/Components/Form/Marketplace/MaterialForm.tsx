@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import { router } from '@inertiajs/react';
-const MaterialForm: React.FC = () => { 
+interface MaterialFormProps {
+    material: any; // Define a specific type if possible
+    onSubmit: (e: React.FormEvent) => void;
+}
+
+const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
 
     const [type, setType] = useState('Offer');
     const [country_id, setCountry] = useState(1);
@@ -69,10 +74,15 @@ const MaterialForm: React.FC = () => {
         setFormData({ ...formData, [name]: files });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-console.log(formData);
+    
+        // Cast e.target as an HTMLFormElement
+        const formElement = e.target as HTMLFormElement;
+    
+        // Create a FormData object from the form element
+        const formData = new FormData(formElement);
+ 
  
         // Prepare data for submission
         //const data = new FormData();
