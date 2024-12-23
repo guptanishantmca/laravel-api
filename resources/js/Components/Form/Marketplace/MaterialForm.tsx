@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-const MaterialForm: React.FC = () => {
+import axios from 'axios'; 
+import { router } from '@inertiajs/react';
+const MaterialForm: React.FC = () => { 
+
     const [type, setType] = useState('Offer');
     const [country_id, setCountry] = useState(1);
     const [formData, setFormData] = useState({
@@ -91,6 +93,8 @@ console.log(formData);
 
             setSuccessMessage(response.data.message);
             setErrors({}); // Clear errors
+            // Use Inertia to navigate to the listing page
+        router.visit('/marketplace/materials');
         } catch (error: any) {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors); // Set validation errors

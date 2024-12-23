@@ -49,7 +49,7 @@ export default function AuthenticatedLayout({
                 children: [
                     { name: t('create'), route: route('materials.create') },
                      
-                    { name: t('manage'), route: route('materials.create') },
+                    { name: t('manage'), route: route('materials.index') },
                 ],
             },{
                 name: t('work'),
