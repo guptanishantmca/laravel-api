@@ -4,6 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import { Head } from '@inertiajs/react';
+import Pagination from '@/Components/common/Pagination';
 
 interface PaginationLink {
     url: string | null;
@@ -24,7 +25,6 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
 }) => {
     const { t } = useTranslation('dashboard');
     useLoadNamespaces(['dashboard']);
-    const pagination = materials;
 
     return (
         <AuthenticatedLayout
@@ -82,18 +82,10 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
                                 )}
                             </tbody>
                         </table>
-                        <div className="flex space-x-2 mt-4">
-                            {pagination.links.map((link, index) => (
-                                <Link
-                                    key={index}
-                                    href={link.url || '#'}
-                                    className={`px-4 py-2 border rounded ${
-                                        link.active ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                                    }`}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                />
-                            ))}
-                        </div>
+                        <Pagination
+                            links={materials.links}
+                            total={materials.total}
+                        />
                     </div>
                 </div>
             </div>
