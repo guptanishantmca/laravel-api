@@ -9,12 +9,19 @@ import LanguageSwitcher from '@/Components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import Sidebar from '@/Layouts/Sidebar';
+type MenuItem = 
+    | { name: string; route: string; children?: undefined }
+    | { name: string; children: { name: string; route: string }[]; route?: undefined };
+
+ 
+
 interface HeaderProps {
     currentNamespaces: string[];
 }
 interface AuthenticatedProps {
     header?: ReactNode;
     currentNamespaces: string[]; // New Prop
+    items: MenuItem[];
 }
 
 interface Language {
@@ -40,6 +47,11 @@ export default function AuthenticatedLayout({
     const toggleSidebar = () => {
         setIsSidebarOpen((prev) => !prev);
     };
+    type SidebarItem = 
+    | { name: string; route: string; children?: never } // No children
+    | { name: string; children: SidebarItem[]; route?: never }; // Has children
+
+type SidebarNavigation = Record<string, SidebarItem[]>;
     const sidebarNavigation = {
         marketplace: [
             { name: t('dashboard'), route: route('dashboard') },
@@ -49,7 +61,7 @@ export default function AuthenticatedLayout({
                 children: [
                     { name: t('create'), route: route('materials.create') },
                      
-                    { name: t('manage'), route: route('materials.create') },
+                    { name: t('manage'), route: route('materials.index') },
                 ],
             },{
                 name: t('work'),
@@ -173,6 +185,7 @@ export default function AuthenticatedLayout({
             setActiveMenu(menuMapping[currentRoute]); // Update active menu
         }
     }, []);
+    console.log(sidebarNavigation);
     return (
         
         <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
@@ -244,55 +257,59 @@ export default function AuthenticatedLayout({
                         <div className="px-6 py-4">
                             <h1 className="text-xl font-bold">{t(activeMenu)}</h1>
                         </div>
-                                 {sidebarNavigation[activeMenu].map((item) => (
-                                    <div key={item.name} className="space-y-1">
-                                        {item.children ? (
-                                            <>
-                                                <button
-                                                    onClick={() => toggleExpand(item.name)}
-                                                    className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-700"
-                                                >
-                                                    <span>{t(item.name)}</span>
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className={`w-5 h-5 transform transition-transform ${expandedItems[item.name] ? 'rotate-180' : ''
-                                                            }`}
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth="2"
-                                                            d="M19 9l-7 7-7-7"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                                {expandedItems[item.name] && (
-                                                    <div className="pl-6 space-y-1">
-                                                        {item.children.map((child) => (
-                                                            <Link
-                                                                key={child.name}
-                                                                href={child.route || '#'}
-                                                                className="block px-4 py-2 rounded hover:bg-gray-700"
-                                                            >
-                                                                {t(child.name)}
-                                                            </Link>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <Link
-                                                href={item.route || '#'}
-                                                className="block px-4 py-2 rounded hover:bg-gray-700"
-                                            >
-                                                {t(item.name)}
-                                            </Link>
-                                        )}
-                                    </div>
-                                ))}
+                        {sidebarNavigation[activeMenu].map((item) => (
+    <div key={item.name} className="space-y-1">
+        {'children' in item ? (
+            <>
+                <button
+                    onClick={() => toggleExpand(item.name)}
+                    className="flex items-center justify-between w-full px-4 py-2 rounded hover:bg-gray-700"
+                >
+                    <span>{t(item.name)}</span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`w-5 h-5 transform transition-transform ${
+                            expandedItems[item.name] ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M19 9l-7 7-7-7"
+                        />
+                    </svg>
+                </button>
+                {expandedItems[item.name] && item.children && (
+                    <div className="pl-6 space-y-1">
+                        {item.children.map((child) => (
+                            <Link
+                                key={child.name}
+                                href={child.route}
+                                className="block px-4 py-2 rounded hover:bg-gray-700"
+                            >
+                                {t(child.name)}
+                            </Link>
+                        ))}
+                    </div>
+                )}
+
+
+
+            </>
+        ) : (
+            <Link
+                href={item.route}
+                className="block px-4 py-2 rounded hover:bg-gray-700"
+            >
+                {t(item.name)}
+            </Link>
+        )}
+    </div>
+))}
 
                             </nav>
                 

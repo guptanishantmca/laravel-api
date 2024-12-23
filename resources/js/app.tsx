@@ -31,7 +31,7 @@ createInertiaApp({
         const root = createRoot(el);
 
 
-        // const { translations, locale } = props.initialPage.props;
+        
         const { locale, translations } = props.initialPage.props;
 
 
@@ -43,9 +43,9 @@ createInertiaApp({
             console.log('Translations object:', translations);
             Object.entries(translations).forEach(([namespace, data]) => {
                 console.log(`Adding namespace: ${namespace}`, data);
-                i18n.addResourceBundle(locale, namespace, data, true, true);
+                i18n.addResourceBundle(savedLanguage, namespace, data, true, true);
             });
-            i18n.changeLanguage(locale); // Ensure this happens after adding the namespaces
+            i18n.changeLanguage(savedLanguage); // Ensure this happens after adding the namespaces
         }
         
         
