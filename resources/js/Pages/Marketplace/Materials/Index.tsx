@@ -5,6 +5,19 @@ import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import { Head } from '@inertiajs/react';
 import Pagination from '@/Components/common/Pagination';
+import { formatDate } from '@/utils/dateFormatter';
+ import i18n from '@/i18n';
+const statusMap: Record<number, string> = {
+    0: "Default",
+    1: "Active",
+    2: "Inactive",
+    3: "Complete",
+    4: "Pending",
+    5: "Cancelled",
+    6: "Ongoing",
+    7: "Expired",
+    8: "Accepted",
+};
 
 interface PaginationLink {
     url: string | null;
@@ -63,8 +76,10 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
                                         <tr key={material.id}>
                                             <td className="px-4 py-2 border">{material.id}</td>
                                             <td className="px-4 py-2 border">{material.title}</td>
-                                            <td className="px-4 py-2 border">{material.created_at}</td>
-                                            <td className="px-4 py-2 border">{material.status}</td>
+                                            <td className="px-4 py-2 border">{formatDate(material.created_at)} {/* Uses default format */}</td>
+                                            <td className="px-4 py-2 border">
+                                                {statusMap[material.status] || t('unknown')}
+                                            </td>
                                             <td className="px-4 py-2 border">
                                                 <Link
                                                     href={`/marketplace/materials/${material.id}/edit`}

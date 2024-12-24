@@ -10,7 +10,7 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
     useLoadNamespaces(['dashboard']);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/marketplace/materials/${material.id}`);
+        put(`/marketplace/materials/update/${material.id}`);
     };
 
     return (
@@ -20,7 +20,14 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
                 {t('dashboard')} {/* Ensure 'dashboard' key exists in translations */}
             </h2>} items={[]}                ><div>
             <h1>Edit Material</h1>
-            <MaterialForm material={material} onSubmit={handleSubmit} />
+            <MaterialForm
+    material={material}
+    onSubmit={handleSubmit}
+    submitUrl={`/marketplace/materials/update/${material.id}`}
+    submitMethod="put"
+    isEdit={true}
+/>
+
         </div></AuthenticatedLayout>
     );
 };

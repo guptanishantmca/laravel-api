@@ -22,7 +22,14 @@ const Create: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }
             </h2>} items={[]}                >
         <div>
              
-            <MaterialForm material={null} onSubmit={handleSubmit} />
+        <MaterialForm
+    material={{}} // Empty object for new material
+    onSubmit={handleSubmit}
+    submitUrl="/marketplace/materials/store"
+    submitMethod="post"
+    isEdit={false}
+/>
+
         </div></AuthenticatedLayout>
     );
 };

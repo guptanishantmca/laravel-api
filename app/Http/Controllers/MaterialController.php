@@ -50,7 +50,7 @@ class MaterialController extends Controller
 
     // Update Material
     public function update(UpdateMaterialRequest $request, Material $material)
-    {
+    { 
         $material->update($request->validated());
 
         return redirect()->route('materials.index')

@@ -23,7 +23,7 @@ const Pagination: React.FC<PaginationProps> = ({ links, total, onPageChange }) =
                         key={index}
                         href={link.url || '#'}
                         className={`px-4 py-2 border rounded ${
-                            link.active ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                            link.active ? 'bg-blue-600 text-white' : 'bg-gray-200'
                         }`}
                         dangerouslySetInnerHTML={{ __html: link.label }}
                         onClick={(e) => {
