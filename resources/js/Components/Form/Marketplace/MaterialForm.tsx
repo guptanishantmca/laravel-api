@@ -4,13 +4,32 @@ import { router } from '@inertiajs/react';
 interface MaterialFormProps {
     material: any; // Define a specific type if possible
     onSubmit: (e: React.FormEvent) => void;
+    submitUrl: string;
+    submitMethod: string;
+    isEdit: boolean;
 }
 
-const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
-
+const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitUrl, submitMethod ,isEdit}) => {
+ 
     const [type, setType] = useState('Offer');
     const [country_id, setCountry] = useState(1);
-    const [formData, setFormData] = useState({
+    // const [formData, setFormData] = useState({
+    //     country_id: 1,
+    //     title: '',
+    //     category_id: '',
+    //     cost_per_unit: '',
+    //     unit: '',
+    //     quantity: '',
+    //     delivery_type: '',
+    //     expiry_date: '',
+    //     description: '',
+    //     state_id: '',
+    //     city: '',
+    //     warranty: '',
+    //     main_image: null,
+    //     product_images: [],
+    // });
+    const [formData, setFormData] = useState(() => ({
         country_id: 1,
         title: '',
         category_id: '',
@@ -25,14 +44,21 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
         warranty: '',
         main_image: null,
         product_images: [],
-    });
-    
+        ...material,
+    }));
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState('');
  
     const [states, setStates] = useState([]);
     const [categories, setCategories] = useState([]);
     
+    // Update formData when material changes
+    useEffect(() => {
+        setFormData({
+            ...material,
+        });
+    }, [material]);
+
     // useEffect(() => {
     //     if (formData.country_id) {
     //         axios.get(`/states/${formData.country_id}`).then((response) => {
@@ -51,6 +77,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
             });
         }
     }, [formData.country_id]);
+    
 
     useEffect(() => {
         
@@ -77,40 +104,29 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
-        // Cast e.target as an HTMLFormElement
         const formElement = e.target as HTMLFormElement;
+        const data = new FormData(formElement);
     
-        // Create a FormData object from the form element
-        const formData = new FormData(formElement);
- 
- 
-        // Prepare data for submission
-        //const data = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-            if (value instanceof FileList) {
-                // If it's a file list, append all files
-                Array.from(value).forEach((file) => formData.append(key, file));
-            } else {
-                formData.append(key, value as string);
-            }
-        });
-
+        // Add `_method` to mimic PUT request
+        if (isEdit) {
+            data.append('_method', 'PUT');
+        }
+    
         try {
-            // Submit the form data
-            const response = await axios.post('/marketplace/materials/store', formData, {
+            const response = await axios.post(submitUrl, data, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-
+    
             setSuccessMessage(response.data.message);
             setErrors({}); // Clear errors
-            // Use Inertia to navigate to the listing page
-        router.visit('/marketplace/materials');
+            router.visit('/marketplace/materials'); // Redirect
         } catch (error: any) {
             if (error.response && error.response.data.errors) {
-                setErrors(error.response.data.errors); // Set validation errors
+                setErrors(error.response.data.errors);
             }
         }
     };
+    
 
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
@@ -141,7 +157,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                         <input
                             type="text"
                             name="title"
-                            value={formData.title}
+                            value={formData.title || ''}
                             onChange={handleInputChange}
                             className="w-full p-2 border rounded"
                             required
@@ -151,7 +167,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                          
                         <select
                 name="category_id"
-                value={formData.category_id}
+                value={formData.category_id || ''}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded"
             >
@@ -167,13 +183,13 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                             <input
                                 type="number"
                                 name="cost_per_unit"
-                                value={formData.cost_per_unit}
+                                value={formData.cost_per_unit || ''}
                                 onChange={handleInputChange}
                                 className="w-2/3 p-2 border rounded"
                             />
                             <select
                                 name="unit"
-                                value={formData.unit}
+                                value={formData.unit || ''}
                                 onChange={handleInputChange}
                                 className="w-1/3 p-2 border rounded"
                             >
@@ -191,7 +207,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                         <input
                             type="number"
                             name="quantity"
-                            value={formData.quantity}
+                            value={formData.quantity || ''}
                             onChange={handleInputChange}
                             className="w-full p-2 border rounded"
                         />
@@ -202,7 +218,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                         <label className="block mb-2">State</label>
                         <select
                 name="state_id"
-                value={formData.state_id}
+                value={formData.state_id || ''}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded"
             >
@@ -218,7 +234,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                         <input
                             type="text"
                             name="city"
-                            value={formData.city}
+                            value={formData.city || ''}
                             onChange={handleInputChange}
                             className="w-full p-2 border rounded"
                         />
@@ -227,7 +243,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                         <input
                             type="number"
                             name="warranty"
-                            value={formData.warranty}
+                            value={formData.warranty || ''}
                             onChange={handleInputChange}
                             className="w-full p-2 border rounded"
                         />
@@ -246,7 +262,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit }) => {
                 <label className="block mt-4 mb-2">Description</label>
                 <textarea
                     name="description"
-                    value={formData.description}
+                    value={formData.description || ''}
                     onChange={handleInputChange}
                     className="w-full p-2 border rounded"
                 />

@@ -26,7 +26,7 @@ Route::middleware(['auth'])->prefix('marketplace/materials')->name('materials.')
     Route::get('/create', [MaterialController::class, 'create'])->name('create');
     Route::post('/store', [MaterialController::class, 'store'])->name('store');
     Route::get('/{material}/edit', [MaterialController::class, 'edit'])->name('edit');
-    Route::put('/{material}', [MaterialController::class, 'update'])->name('update');
+    Route::put('/update/{material}', [MaterialController::class, 'update'])->name('update');
 });
 
 Route::group(['middleware' => ['role_or_permission:Settings|Permissions']], function () {
