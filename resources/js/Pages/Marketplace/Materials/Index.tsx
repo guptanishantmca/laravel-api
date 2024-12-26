@@ -80,7 +80,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
                                             <td className="px-4 py-2 border">
                                                 {statusMap[material.status] || t('unknown')}
                                             </td>
-                                            <td className="px-4 py-2 border">
+                                            <td className="px-4 py-2 border"> 
                                                 <Link
                                                     href={`/marketplace/materials/${material.id}/edit`}
                                                     className="text-blue-500 hover:underline"
