@@ -3,17 +3,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\File;
+use App\Models\FileManager;
 use App\Models\Folder;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class FileManagerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $folders = Folder::where('created_by', auth()->id())->get();
-        $files = File::where('uploaded_by', auth()->id())->get();
-        return view('filemanager.index', compact('folders', 'files'));
+        $currentFolderId = $request->query('folder');
+        $currentFolder = Folder::find($currentFolderId);
+        $folders = Folder::where('parent_id', $currentFolderId)->get();
+        $files = FileManager::where('folder_id', $currentFolderId)->get();
+
+        return Inertia::render('MyBusiness/FileManager/Index', [
+            'folders' => $folders,
+            'files' => $files,
+            'currentFolder' => $currentFolder,
+            'parentFolderId' => $currentFolder->parent_id ?? null,
+        ]);
     }
+
 
     public function upload(Request $request)
     {
@@ -23,7 +34,7 @@ class FileManagerController extends Controller
         ]);
 
         $path = $request->file('file')->store('filemanager/' . auth()->id());
-        File::create([
+        FileManager::create([
             'name' => $request->file->getClientOriginalName(),
             'path' => $path,
             'type' => $request->file->getMimeType(),
@@ -60,7 +71,7 @@ class FileManagerController extends Controller
 
     public function deleteFile($id)
     {
-        $file = File::findOrFail($id);
+        $file = FileManager::findOrFail($id);
         Storage::delete($file->path);
         $file->delete();
 
