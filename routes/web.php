@@ -21,6 +21,17 @@ Route::get('/countries', [LocationController::class, 'getCountries']);
 Route::get('/states/{country_id}', [LocationController::class, 'getStates']);
 Route::get('/categories', [CategoryController::class, 'getCategories']);
 
+Route::prefix('filemanager')->middleware(['auth'])->group(function () {
+    Route::get('/', [FileManagerController::class, 'index']); // Display file manager
+    Route::post('/upload', [FileManagerController::class, 'upload']); // Upload files
+    Route::post('/folder', [FileManagerController::class, 'createFolder']); // Create folder
+    Route::delete('/folder/{id}', [FileManagerController::class, 'deleteFolder']); // Delete folder
+    Route::delete('/file/{id}', [FileManagerController::class, 'deleteFile']); // Delete file
+    Route::get('/browse', [FileManagerController::class, 'browse']); // Browse files for selection
+});
+
+
+
 Route::middleware(['auth'])->prefix('marketplace/materials')->name('materials.')->group(function () {
     Route::get('/', [MaterialController::class, 'index'])->name('index');
     Route::get('/create', [MaterialController::class, 'create'])->name('create');
