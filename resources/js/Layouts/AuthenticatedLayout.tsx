@@ -91,7 +91,7 @@ type SidebarNavigation = Record<string, SidebarItem[]>;
         my_business: [
             { name: t('files'),
                 children: [
-                    { name: t('Add New'), route: route('roles.manage') },
+                    { name: t('Add New'), route: route('filemanager.index') },
                     
                 ],
             },

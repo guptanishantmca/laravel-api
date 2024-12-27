@@ -17,17 +17,18 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\MaterialController; 
 use App\Http\Controllers\LocationController; 
 use App\Http\Controllers\CategoryController; 
+use App\Http\Controllers\FileManagerController; 
+
 Route::get('/countries', [LocationController::class, 'getCountries']);
 Route::get('/states/{country_id}', [LocationController::class, 'getStates']);
 Route::get('/categories', [CategoryController::class, 'getCategories']);
 
-Route::prefix('filemanager')->middleware(['auth'])->group(function () {
-    Route::get('/', [FileManagerController::class, 'index']); // Display file manager
-    Route::post('/upload', [FileManagerController::class, 'upload']); // Upload files
-    Route::post('/folder', [FileManagerController::class, 'createFolder']); // Create folder
-    Route::delete('/folder/{id}', [FileManagerController::class, 'deleteFolder']); // Delete folder
-    Route::delete('/file/{id}', [FileManagerController::class, 'deleteFile']); // Delete file
-    Route::get('/browse', [FileManagerController::class, 'browse']); // Browse files for selection
+Route::prefix('mybusniess/filemanager')->middleware(['auth'])->group(function () {
+    Route::get('/', [FileManagerController::class, 'index'])->name('filemanager.index');
+    Route::post('/folder', [FileManagerController::class, 'createFolder']);
+    Route::delete('/folder/{id}', [FileManagerController::class, 'deleteFolder']);
+    Route::post('/upload', [FileManagerController::class, 'upload']);
+    Route::delete('/file/{id}', [FileManagerController::class, 'deleteFile']);
 });
 
 
