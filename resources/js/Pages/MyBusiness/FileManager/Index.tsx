@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
- 
+import { Inertia } from '@inertiajs/inertia';
 import { usePage } from '@inertiajs/react';
-
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { useTranslation } from 'react-i18next';
+import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 interface File {
     id: number;
     name: string;
@@ -21,16 +23,19 @@ interface FileManagerProps {
     folders: Folder[];
     currentFolder?: Folder;
     parentFolderId?: number | null;
+    currentNamespaces: string[];
 }
 
-const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder, parentFolderId }) => {
+const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder, parentFolderId, currentNamespaces }) => {
+    const { t } = useTranslation('dashboard'); // Use the 'dashboard' namespace
+    useLoadNamespaces(['dashboard']);
     const [newFolderName, setNewFolderName] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [fileToUpload, setFileToUpload] = useState<File | null>(null);
 
     const handleCreateFolder = () => {
         if (!newFolderName.trim()) return;
-        Inertia.post('/filemanager/folder', { name: newFolderName, parent_id: currentFolder?.id || null }, {
+        Inertia.post('/mybusniess/filemanager/folder', { name: newFolderName, parent_id: currentFolder?.id || null }, {
             onSuccess: () => setNewFolderName(''),
         });
     };
@@ -42,7 +47,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
             formData.append('file', file);
             formData.append('folder_id', currentFolder?.id || '');
 
-            Inertia.post('/filemanager/upload', formData, {
+            Inertia.post('/mybusniess/filemanager/upload', formData, {
                 onSuccess: () => setFileToUpload(null),
             });
         }
@@ -50,17 +55,26 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
 
     const handleDeleteFolder = (folderId: number) => {
         if (confirm('Are you sure you want to delete this folder?')) {
-            Inertia.delete(`/filemanager/folder/${folderId}`);
+            Inertia.delete(`/mybusniess/filemanager/folder/${folderId}`);
         }
     };
 
     const handleDeleteFile = (fileId: number) => {
         if (confirm('Are you sure you want to delete this file?')) {
-            Inertia.delete(`/filemanager/file/${fileId}`);
+            Inertia.delete(`/mybusniess/filemanager/file/${fileId}`);
         }
     };
 
     return (
+        <AuthenticatedLayout
+                    currentNamespaces={currentNamespaces}
+                    header={
+                        <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                            {t('dashboard')}
+                        </h2>
+                    }
+                    items={[]}
+                >
         <div className="file-manager p-4">
             <h1 className="text-xl font-bold mb-4">File Manager</h1>
 
@@ -96,7 +110,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                 {parentFolderId && (
                     <button
                         className="text-blue-500"
-                        onClick={() => Inertia.get(`/filemanager?folder=${parentFolderId}`)}
+                        onClick={() => Inertia.get(`/mybusniess/filemanager?folder=${parentFolderId}`)}
                     >
                         Back
                     </button>
@@ -109,7 +123,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                         <div className="flex justify-between">
                             <span
                                 className="cursor-pointer text-blue-500"
-                                onClick={() => Inertia.get(`/filemanager?folder=${folder.id}`)}
+                                onClick={() => Inertia.get(`/mybusniess/filemanager?folder=${folder.id}`)}
                             >
                                 📁 {folder.name}
                             </span>
@@ -145,6 +159,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                 ))}
             </div>
         </div>
+        </AuthenticatedLayout>
     );
 };
 

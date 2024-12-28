@@ -14,6 +14,7 @@ class FileManager extends Model
         'path',
         'type',
         'folder_id',
+        'uploaded_by',
     ];
 
     public function folder()
