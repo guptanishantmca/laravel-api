@@ -18,16 +18,13 @@ class Folder extends Model
     /**
      * Relationship: Subfolders of this folder
      */
+    public function files()
+    {
+        return $this->hasMany(FileManager::class);
+    }
+
     public function subfolders()
     {
         return $this->hasMany(Folder::class, 'parent_id');
-    }
-
-    /**
-     * Relationship: Files within this folder
-     */
-    public function files()
-    {
-        return $this->hasMany(Filemanager::class);
     }
 }
