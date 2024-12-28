@@ -29,29 +29,31 @@ class FileManagerController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:2048', // Validate file type and size
+            'files.*' => 'required|file|mimes:jpg,png,jpeg,gif,pdf,docx',
+            'folder_id' => 'nullable|integer|exists:folders,id',
         ]);
 
-        $file = $request->file('file');
-        $folderId = $request->input('folder_id', null);
+        $folderId = $request->input('folder_id');
+            // Determine the folder path
+            $folderPath = $folderId ? "folders/$folderId" : "files";
 
-        // Determine the folder path
-        $folderPath = $folderId ? "folders/$folderId" : "files";
+        foreach ($request->file('files') as $file) {
 
-        // Store the file
-        $path = $file->store($folderPath, 'public');
 
-        // Save the file record in the database
-        FileManager::create([
-            'name' => $file->getClientOriginalName(),
-            'path' => $path,
-            'type' => $file->getMimeType(),
-            'folder_id' => $folderId,
-            'uploaded_by' => auth()->id(),
-        ]);
+            // Store the file
+            $path = $file->store($folderPath, 'public');
+            FileManager::create([
+                'name' => $file->getClientOriginalName(),
+                'path' => $path,
+                'type' => $file->getClientMimeType(),
+                'folder_id' => $folderId,
+                'uploaded_by' => auth()->id(),
+            ]);
+        }
 
-        return redirect()->back()->with('success', 'File uploaded successfully.');
+        return back()->with('success', 'Files uploaded successfully!');
     }
+
 
 
    
@@ -86,10 +88,32 @@ class FileManagerController extends Controller
     public function deleteFolder($id)
     {
         $folder = Folder::findOrFail($id);
-        $folder->delete();
 
-        return back()->with('success', 'Folder deleted successfully.');
+        // Debug: Log folder details
+        \Log::info('Deleting folder: ' . $folder->id);
+
+        // Delete all files in the folder
+        foreach ($folder->files as $file) {
+            // Debug: Log file details
+            \Log::info('Deleting file: ' . $file->id);
+
+            Storage::delete($file->path); // Delete physical file
+            $file->delete(); // Delete database record
+        }
+
+        // Delete all subfolders recursively
+        foreach ($folder->subfolders as $subfolder) {
+            \Log::info('Deleting subfolder: ' . $subfolder->id);
+            $this->deleteFolder($subfolder->id); // Recursive call
+        }
+
+        // Finally delete the folder
+        \Log::info('Deleting folder record: ' . $folder->id);
+        $folder->delete();
     }
+
+
+
 
     public function deleteFile($id)
     {
