@@ -28,8 +28,8 @@ interface FileManagerProps {
 }
 
 const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder, parentFolderId, currentNamespaces }) => {
-    const { t } = useTranslation('dashboard'); // Use the 'dashboard' namespace
-    useLoadNamespaces(['dashboard']);
+    const { t } = useTranslation('filemanager'); // Use the 'dashboard' namespace
+    useLoadNamespaces(['filemanager']);
     const [newFolderName, setNewFolderName] = useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -72,7 +72,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
             currentNamespaces={currentNamespaces}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {t('dashboard')}
+                    {t('filemanager')}
                 </h2>
             }
             items={[]}
@@ -80,7 +80,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <div className="file-manager p-4">
-                        <h1 className="text-2xl font-bold mb-4">File Manager</h1>
+                        <h1 className="text-2xl font-bold mb-4"> {t('filemanager')}</h1>
 
                         {/* Actions */}
                         <div className="actions mb-6 flex flex-wrap gap-4">
@@ -96,7 +96,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                                 onClick={handleCreateFolder}
                             >
-                                Create Folder
+                                {t('create_folder')}
                             </button>
 
                             {/* Upload Files */}
@@ -111,7 +111,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                                 htmlFor="file-upload"
                                 className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600"
                             >
-                                Upload Files
+                                {t('upload_files')}
                             </label>
                         </div>
 
@@ -122,7 +122,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                                     className="text-blue-500 hover:underline"
                                     onClick={() => Inertia.get(`/mybusniess/filemanager?folder=${parentFolderId}`)}
                                 >
-                                    Back
+                                    {t('back')}
                                 </button>
                             )}
                         </div>
@@ -193,7 +193,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
         className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={() => handleDeleteFile(file.id)}
     >
-        Delete
+        {t('delete')}
     </button>
 </div>
 
