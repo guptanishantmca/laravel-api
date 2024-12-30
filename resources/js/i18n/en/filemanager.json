@@ -4,5 +4,6 @@
     "create_folder": "Create Folder",
     "upload_files": "Upload Files",
     "back": "Back",
-    "delete": "Delete"
+    "delete": "Delete",
+    "new_folder_name": "New Folder Name"
 }

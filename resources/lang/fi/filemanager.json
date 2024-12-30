@@ -4,5 +4,6 @@
     "create_folder": "Luo kansio",
     "upload_files": "Lataa tiedostoja",
     "back": "Takaisin",
-    "delete": "Poista"
+    "delete": "Poista",
+    "new_folder_name":"Uusi kansion nimi"
 }
