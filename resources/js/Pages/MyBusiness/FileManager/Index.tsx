@@ -88,7 +88,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                             <input
                                 type="text"
                                 className="border rounded p-2 flex-grow"
-                                placeholder="New Folder Name"
+                                placeholder={t('new_folder_name')}
                                 value={newFolderName}
                                 onChange={(e) => setNewFolderName(e.target.value)}
                             />
@@ -133,7 +133,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
     {folders.map((folder) => (
         <div
             key={folder.id}
-            className="relative border p-4 rounded shadow hover:shadow-lg bg-gray-50"
+            className="relative border p-4 rounded shadow hover:shadow-lg bg-gray-50 group"
         >
             <div className="flex justify-between">
                 <span
@@ -142,6 +142,12 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
                 >
                     📁 {folder.name}
                 </span>
+                <button
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => handleDeleteFolder(folder.id)}
+                >
+                    {t('delete')}
+                </button>
             </div>
         </div>
     ))}
