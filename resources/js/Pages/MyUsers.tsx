@@ -1,31 +1,21 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import Sidebar from '@/Layouts/Sidebar';
 import { Head, useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
-import Table from '@/Components/Table';
 import Pagination from '@/Components/common/Pagination';
+
 interface Role {
     id: number;
     name: string;
-    guard_name: string;
-    created_at: string;
-    updated_at: string;
-    pivot: {
-        model_type: string;
-        model_id: number;
-        role_id: number;
-    };
 }
 
 interface User {
     id: number;
     name: string;
     email: string;
-    role: string; // You can keep this if some users might have a single role
     created_at: string;
-    roles: Role[]; // Add roles as an array of Role objects
+    roles: Role[];
 }
 
 interface PaginationLink {
@@ -36,20 +26,19 @@ interface PaginationLink {
 
 interface PaginationProps {
     links: PaginationLink[];
+    total: number;
 }
+
 interface NewPageProps {
     users: {
-        data: User[]; // Paginated users
-        links: PaginationLink[]; // Pagination links
-        total: number; // Total users count
+        data: User[];
+        links: PaginationLink[];
+        total: number;
     };
-    roles: string[]; // List of available roles
-    currentNamespaces: string[];
+    roles: string[];
 }
 
-
 const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
-console.log('user',users);
     const { t } = useTranslation('users');
     const isLoaded = useLoadNamespaces(['users']);
     const [showForm, setShowForm] = useState(false);
@@ -59,7 +48,7 @@ console.log('user',users);
     const { data, setData, post, put, delete: destroy, reset, errors } = useForm({
         name: '',
         email: '',
-        role: '', // Add role to form data
+        role: '',
     });
 
     if (!isLoaded) {
@@ -68,7 +57,6 @@ console.log('user',users);
 
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
         if (isEditing && currentUserId) {
             put(`/users/${currentUserId}`, {
                 onSuccess: () => {
@@ -89,11 +77,10 @@ console.log('user',users);
     };
 
     const handleEditClick = (user: User) => {
-
         setData({
             name: user.name,
             email: user.email,
-            role: user.roles.length > 0 ? user.roles[0].name : '', 
+            role: user.roles.length > 0 ? user.roles[0].name : '',
         });
         setCurrentUserId(user.id);
         setIsEditing(true);
@@ -109,192 +96,142 @@ console.log('user',users);
             });
         }
     };
-    const columns = [
-        { header: t('ID'), accessor: 'id' },
-        { header: t('Name'), accessor: 'name' },
-        { header: t('Email'), accessor: 'email' },
-        { header: t('Role'), accessor: 'role' },
-        { header: t('Joined'), accessor: (user: User) => new Date(user.created_at).toLocaleDateString() },
-        {
-            header: t('Actions'),
-            accessor: (user: User) => (
-                <>
-                    <button
-                        onClick={() => handleEditClick(user)}
-                        className="mr-2 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-600"
-                    >
-                        {t('edit')}
-                    </button>
-                    <button
-                        onClick={() => handleDeleteClick(user.id)}
-                        className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600"
-                    >
-                        {t('delete')}
-                    </button>
-                </>
-            ),
-        },
-    ];
+
     return (
         <AuthenticatedLayout
             currentNamespaces={['users']}
-            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
-                {t('title')}
-            </h2>} items={[]}        >
-            
-           
-                
+            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">{t('title')}</h2>}
+        >
+            <div className="flex-1 p-6 overflow-auto">
+                <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
+                    <Head title={t('Users List')} />
+                    <h1 className="text-2xl font-bold mb-4">{t('users_list')}</h1>
 
-                {/* Main Content */}
-                <div className="flex-1 p-6 overflow-auto">
-                    {/* Card Wrapper */}
-                    <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                        <div className="p-6">
-                            <Head title={t('Users List')} />
-                            <h1 className="text-2xl font-bold mb-4">{t('users_list')}</h1>
+                    <button
+                        onClick={() => {
+                            setShowForm(!showForm);
+                            setIsEditing(false);
+                            reset();
+                        }}
+                        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        {t('add_user')}
+                    </button>
 
-                            {/* Add User Button */}
-                            <button
-                                onClick={() => {
-                                    setShowForm(!showForm);
-                                    setIsEditing(false);
-                                    reset();
-                                }}
-                                className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                {t('add_user')}
-                            </button>
+                    {showForm && (
+                        <form onSubmit={handleFormSubmit} className="mb-6 p-4 border rounded bg-gray-50">
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">{t('Name')}</label>
+                                <input
+                                    type="text"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    className="mt-1 p-2 block w-full border rounded-md"
+                                />
+                                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">{t('Email')}</label>
+                                <input
+                                    type="email"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    className="mt-1 p-2 block w-full border rounded-md"
+                                />
+                                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700">{t('Role')}</label>
+                                <select
+                                    value={data.role || ''}
+                                    onChange={(e) => setData('role', e.target.value)}
+                                    className="mt-1 p-2 block w-full border rounded-md"
+                                >
+                                    <option value="">{t('Select a Role')}</option>
+                                    {roles.map((role) => (
+                                        <option key={role} value={role}>
+                                            {role}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}
+                            </div>
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                >
+                                    {isEditing ? t('update') : t('save')}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowForm(false);
+                                        setIsEditing(false);
+                                        reset();
+                                    }}
+                                    className="ml-2 px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+                                >
+                                    {t('cancel')}
+                                </button>
+                            </div>
+                        </form>
+                    )}
 
-
-
-                            {/* User Form */}
-                            {showForm && (
-                                <form onSubmit={handleFormSubmit} className="mb-6 p-4 border rounded bg-gray-50">
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700">
-                                            {t('Name')}
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={data.name}
-                                            onChange={(e) => setData('name', e.target.value)}
-                                            className="mt-1 p-2 block w-full border rounded-md"
-                                        />
-                                        {errors.name && (
-                                            <p className="text-red-500 text-sm">{errors.name}</p>
-                                        )}
-                                    </div>
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700">
-                                            {t('Email')}
-                                        </label>
-                                        <input
-                                            type="email"
-                                            value={data.email}
-                                            onChange={(e) => setData('email', e.target.value)}
-                                            className="mt-1 p-2 block w-full border rounded-md"
-                                        />
-                                        {errors.email && (
-                                            <p className="text-red-500 text-sm">{errors.email}</p>
-                                        )}
-                                    </div>
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700">
-                                            {t('Role')}
-                                        </label>
-                                        <select
-                                            value={data.role || ''} // Default to an empty string if data.role is undefined
-                                            onChange={(e) => setData('role', e.target.value)}
-                                            className="mt-1 p-2 block w-full border rounded-md"
-                                        >
-                                            <option value="">{t('Select a Role')}</option>
-                                            {roles.map((role) => (
-                                                <option key={role} value={role}>
-                                                    {role}
-                                                </option>
-                                            ))}
-                                        </select>
-
-
-                                        {errors.role && (
-                                            <p className="text-red-500 text-sm">{errors.role}</p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <button
-                                            type="submit"
-                                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                                        >
-                                            {isEditing ? t('update') : t('save')}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setShowForm(false);
-                                                setIsEditing(false);
-                                                reset();
-                                            }}
-                                            className="ml-2 px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
-                                        >
-                                            {t('cancel')}
-                                        </button>
-                                    </div>
-                                </form>
+                    <table className="min-w-full bg-white border border-gray-300">
+                        <thead>
+                            <tr>
+                                <th className="px-4 py-2 border">{t('ID')}</th>
+                                <th className="px-4 py-2 border">{t('Name')}</th>
+                                <th className="px-4 py-2 border">{t('Email')}</th>
+                                <th className="px-4 py-2 border">{t('Role')}</th>
+                                <th className="px-4 py-2 border">{t('Joined')}</th>
+                                <th className="px-4 py-2 border">{t('Actions')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users?.data?.length > 0 ? (
+                                users.data.map((user: User) => (
+                                    <tr key={user.id}>
+                                        <td className="px-4 py-2 border">{user.id}</td>
+                                        <td className="px-4 py-2 border">{user.name}</td>
+                                        <td className="px-4 py-2 border">{user.email}</td>
+                                        <td className="px-4 py-2 border">
+                                            {user.roles.length > 0
+                                                ? user.roles.map((role) => role.name).join(', ')
+                                                : t('No Role Assigned')}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            {new Date(user.created_at).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            <button
+                                                onClick={() => handleEditClick(user)}
+                                                className="mr-2 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-600"
+                                            >
+                                                {t('edit')}
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteClick(user.id)}
+                                                className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600"
+                                            >
+                                                {t('delete')}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={6} className="text-center py-4">
+                                        {t('No users found')}
+                                    </td>
+                                </tr>
                             )}
-
-                            {/* Users Table */}
-                           
-                            <table className="min-w-full bg-white border border-gray-300">
-                                <thead>
-                                    <tr>
-                                        <th className="px-4 py-2 border">{t('ID')}</th>
-                                        <th className="px-4 py-2 border">{t('Name')}</th>
-                                        <th className="px-4 py-2 border">{t('Email')}</th>
-                                        <th className="px-4 py-2 border">{t('Role')}</th>
-                                        <th className="px-4 py-2 border">{t('Joined')}</th>
-                                        <th className="px-4 py-2 border">{t('Actions')}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {users?.data?.length > 0 ? (
-                                    users.data.map((user: any) => (
-                                    
-                                        <tr key={user.id}>
-                                            <td className="px-4 py-2 border">{user.id}</td>
-                                            <td className="px-4 py-2 border">{user.name}</td>
-                                            <td className="px-4 py-2 border">{user.email}</td>
-                                            <td className="px-4 py-2 border">{user.roles.length > 0 ? user.roles.map((role: Role) => role.name).join(', ') : t('No Role Assigned')}</td>
-                                            <td className="px-4 py-2 border">
-                                                {new Date(user.created_at).toLocaleDateString()}
-                                            </td>
-                                            <td className="px-4 py-2 border">
-                                                <button
-                                                    onClick={() => handleEditClick(user)}
-                                                    className="mr-2 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-600"
-                                                >
-                                                    {t('edit')}
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDeleteClick(user.id)}
-                                                    className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600"
-                                                >
-                                                    {t('delete')}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={5}>{t('no_user_found')}</td>
-                                    </tr>
-                                )}
-                                </tbody>
-                            </table>
-                            <Pagination links={users.links} total={users.total} />
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
+                    <Pagination links={users.links} total={users.total} />
                 </div>
-           
+            </div>
         </AuthenticatedLayout>
     );
 };
