@@ -13,7 +13,8 @@ class UserController extends Controller
     public function index()
     {
         $locale = App::getLocale();
-        $users = User::with('roles')->paginate(10);
+        $pagination = config('admin_settings.pagination');
+        $users = User::with('roles')->paginate($pagination);
         
                 $roles = Role::pluck('name');
         

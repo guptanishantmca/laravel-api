@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
+    { 
         Inertia::share('locale', function () {
             return app()->getLocale(); // The current locale
         });

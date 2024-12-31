@@ -13,8 +13,9 @@ class MaterialController extends Controller
     // List Materials
     public function index()
     {
+        $pagination = config('admin_settings.pagination');
         $materials = Material::with(['category', 'state', 'country'])
-            ->paginate(10);
+            ->paginate($pagination);
 
         return Inertia::render('Marketplace/Materials/Index', [
             'materials' => $materials,
