@@ -142,44 +142,48 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 
 //Route::get('/users', [UserController::class, 'index'])->name('users');
 
-
-Route::post('/users', function (Request $request) {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'role' => 'required|string|exists:roles,name', // Ensure the role exists
-    ]);
-
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt('password'),
-    ]);
-
-    $user->assignRole($request->role); // Assign role to the user
-
-    return redirect()->back();
+Route::middleware(['auth'])->group(function () {
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
+// Route::post('/users', function (Request $request) {
+//     $request->validate([
+//         'name' => 'required|string|max:255',
+//         'email' => 'required|email|unique:users,email',
+//         'role' => 'required|string|exists:roles,name', // Ensure the role exists
+//     ]);
 
-Route::put('/users/{user}', function (Request $request, User $user) {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'role' => 'required|string|exists:roles,name',
-    ]);
+//     $user = User::create([
+//         'name' => $request->name,
+//         'email' => $request->email,
+//         'password' => bcrypt('password'),
+//     ]);
 
-    $user->update($request->only(['name', 'email']));
-    $user->syncRoles([$request->role]); // Update user role
+//     $user->assignRole($request->role); // Assign role to the user
 
-    return redirect()->back();
-});
+//     return redirect()->back();
+// });
+
+// Route::put('/users/{user}', function (Request $request, User $user) {
+//     $request->validate([
+//         'name' => 'required|string|max:255',
+//         'email' => 'required|email|unique:users,email,' . $user->id,
+//         'role' => 'required|string|exists:roles,name',
+//     ]);
+
+//     $user->update($request->only(['name', 'email']));
+//     $user->syncRoles([$request->role]); // Update user role
+
+//     return redirect()->back();
+// });
 
 
-Route::delete('/users/{user}', function (User $user) {
-    $user->delete();
+// Route::delete('/users/{user}', function (User $user) {
+//     $user->delete();
 
-    return redirect()->back();
-});
+//     return redirect()->back();
+// });
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
