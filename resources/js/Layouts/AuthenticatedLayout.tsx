@@ -351,7 +351,7 @@ type SidebarNavigation = Record<string, SidebarItem[]>;
                         </button>
 
                         {/* Desktop Navigation */}
-                        <div className="hidden md:flex flex h-16 space-x-8">
+                        <div className="hidden md:flex h-16 space-x-8">
                             <button
                                 onClick={() => setActiveMenu('marketplace')}
                                 className={`text-sm font-medium ${

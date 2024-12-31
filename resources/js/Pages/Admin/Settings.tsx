@@ -30,8 +30,7 @@ export default function Settings() {
     return (
         <AuthenticatedLayout
             currentNamespaces={['settings']}
-            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">{t('title')}</h2>}
-        >
+            header={<h2 className="text-xl font-semibold leading-tight text-gray-800">{t('title')}</h2>} items={[]}        >
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <Head title={t('Admin Settings')} />
