@@ -146,6 +146,7 @@ type SidebarNavigation = Record<string, SidebarItem[]>;
              
         ],
         settings: [
+            { name: t('Admin Settings'), route: route('admin.settings') },
             { name: t('All Users'), route: route('users') },
             {
                 name: t('Roles'),

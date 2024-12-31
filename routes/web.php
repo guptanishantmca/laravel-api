@@ -18,6 +18,12 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\LocationController; 
 use App\Http\Controllers\CategoryController; 
 use App\Http\Controllers\FileManagerController; 
+use App\Http\Controllers\AdminSettingsController;
+
+Route::middleware(['auth', 'role:super admin'])->group(function () {
+    Route::get('/admin/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
+    Route::post('/admin/settings', [AdminSettingsController::class, 'update']);
+});
 
 Route::get('/countries', [LocationController::class, 'getCountries']);
 Route::get('/states/{country_id}', [LocationController::class, 'getStates']);
