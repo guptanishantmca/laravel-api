@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import { Head } from '@inertiajs/react';
 import { PageProps } from '@inertiajs/core';
+import { format } from 'date-fns';
 
 interface Settings {
     pagination: number;
@@ -21,7 +22,7 @@ export default function Settings() {
     const { t } = useTranslation('settings');
     const isLoaded = useLoadNamespaces(['settings']);
     const { settings } = usePage<CustomPageProps>().props;
-
+    const currentDate = new Date();
     const [form, setForm] = useState({
         pagination: settings?.pagination || 10,
         date_format: settings?.date_format || 'Y-m-d',
@@ -66,14 +67,27 @@ export default function Settings() {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Date Format:</label>
-                                <input
+                                <select
+    name="date_format"
+    value={form.date_format}
+    onChange={handleChange}
+    className="mt-1 p-2 block border rounded-md w-60"
+>
+    <option value="Y-m-d">{format(currentDate, 'yyyy-MM-dd')} (Y-m-d)</option>
+    <option value="m-d-y">{format(currentDate, 'MM-dd-yyyy')} (m-d-y)</option>
+    <option value="MM/dd/yyyy">{format(currentDate, 'MM/dd/yyyy')}</option>
+    <option value="dd/MM/yyyy">{format(currentDate, 'dd/MM/yyyy')}</option>
+    <option value="Pp">{format(currentDate, 'Pp')}</option>
+    <option value="PPpp">{format(currentDate, 'PPpp')}</option>
+</select>
+                                {/* <input
                                     type="text"
                                     name="date_format"
                                     value={form.date_format}
                                     onChange={handleChange}
                                     placeholder="e.g., Y-m-d"
                                     className="mt-1 p-2 block border rounded-md w-60"
-                                />
+                                /> */}
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Language:</label>

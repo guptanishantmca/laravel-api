@@ -2,6 +2,6 @@
 
 return array (
   'pagination' => '10',
-  'date_format' => 'Y-m-d',
+  'date_format' => 'PPpp',
   'language' => 'en',
 );
