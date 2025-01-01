@@ -24,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
         Inertia::share('locale', function () {
             return app()->getLocale(); // The current locale
         });
+
+        Inertia::share('date_format', function () {
+            return  config('admin_settings.date_format');; // The current locale
+        });
        
         Inertia::share('translations', function () {
             $locale = app()->getLocale();

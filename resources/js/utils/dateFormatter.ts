@@ -1,25 +1,25 @@
 import { format } from 'date-fns';
 import { enUS, fi } from 'date-fns/locale';
 import i18n from '@/i18n';
-
-const DEFAULT_DATE_FORMAT = 'PPpp';  // Example: Dec 24, 2024, 3:47 PM
+import { useSharedProps } from '@/hooks/useSharedProps';
 
 // Supported locales
 const locales = { en: enUS, fi };
 
-// Function to format date with dynamic locale support
-export const formatDate = (
-    date: string | Date, 
-    formatStr: string = DEFAULT_DATE_FORMAT 
-): string => {
-    if (!date) return '-';  // Handle empty or invalid dates
+// Fetch the date format from shared props
+export const getDateFormat = (): string => {
+    const { date_format } = useSharedProps();
+    console.log('useSharedProps()',useSharedProps());
+    return date_format || 'PPpp'; // Fallback to default format if undefined
+};
 
-    // Get the current language from i18n
-    const lang = i18n.language as 'en' | 'fi';
+// Format a date using shared `date_format` and current language
+export const formatDate = (date: string | Date): string => {
+    if (!date) return '-'; // Handle invalid dates
 
-    // Select the appropriate locale, fallback to English if not found
-    const selectedLocale = locales[lang] || enUS;
+    const formatStr = getDateFormat(); // Get shared date format
+    const lang = i18n.language as 'en' | 'fi'; // Get current language from i18n
+    const selectedLocale = locales[lang] || enUS; // Fallback to English locale
 
-    // Format and return the date
     return format(new Date(date), formatStr, { locale: selectedLocale });
 };
