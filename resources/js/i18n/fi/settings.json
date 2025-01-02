@@ -1,5 +1,7 @@
 {
-    "dashboard": "Finnish Dashboard",
-    "welcome": "Finnish Welcome to the Admin Panel",
-    "welcome_message": "Finnish This is your admin dashboard where you can manage everything!"
+    "title": "Ylläpitoasetukset",
+    "Pagination Size": "Sivutuskoko",
+    "Date Format": "Päivämäärän muoto",
+    "Date Language": "Kieli",
+    "Save Settings": "Tallenna asetukset"
 }
