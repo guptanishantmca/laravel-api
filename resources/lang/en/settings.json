@@ -1,5 +1,7 @@
 {
-    "dashboard" : "EN Dashboard",
-    "welcome" : "Welcome to the Admin Panel",
-    "welcome_message" : "This is your admin dashboard where you can manage everything!"
+    "title" : "Admin Settings",
+    "Pagination Size" : "Pagination Size",
+    "Date Format" : "Date Format",
+    "Date Language" : "Language",
+    "Save Settings" : "Save Settings"
 }
