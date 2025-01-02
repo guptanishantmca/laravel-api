@@ -49,12 +49,12 @@ export default function Settings() {
         >
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                    <Head title={t('Admin Settings')} />
+                    <Head title={t('title')} />
                     <div>
-                        <h1 className="text-2xl font-bold mb-4">Admin Settings</h1>
+                        <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
                         <form onSubmit={handleSubmit} className="mb-6 p-4 border rounded bg-gray-50">
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Pagination Size:</label>
+                                <label className="block text-sm font-medium text-gray-700">{t('Pagination Size')} :</label>
                                 <input
                                     type="number"
                                     name="pagination"
@@ -66,7 +66,7 @@ export default function Settings() {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Date Format:</label>
+                                <label className="block text-sm font-medium text-gray-700">{t('Date Format')}:</label>
                                 <select
     name="date_format"
     value={form.date_format}
@@ -90,7 +90,7 @@ export default function Settings() {
                                 /> */}
                             </div>
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Language:</label>
+                                <label className="block text-sm font-medium text-gray-700">{t('Language')}:</label>
                                 <select
                                     name="language"
                                     value={form.language}
@@ -106,7 +106,7 @@ export default function Settings() {
                                 type="submit"
                                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                             >
-                                Save Settings
+                                {t('Save Settings')}
                             </button>
                         </form>
                     </div>
