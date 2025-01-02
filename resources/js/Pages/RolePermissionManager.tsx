@@ -22,7 +22,7 @@ interface Role {
     name: string;
 }
 const RolePermissionManager: React.FC = () => {
-    const { t } = useTranslation('users');
+    const { t } = useTranslation('rolepermissionmanager');
 
 
 
@@ -68,28 +68,28 @@ const RolePermissionManager: React.FC = () => {
 
     return (
         <AuthenticatedLayout
-            currentNamespaces={['users']}
+            currentNamespaces={['rolepermissionmanager']}
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
-                Manage Role Permissions
+                {t('title')}
             </h2>} items={[]}        >
-            <Head title="Manage Roles and Permissions" />
+            <Head title={t('title')} />
          
 
                 {/* Main Content */}
                 <div className="flex-1 p-6 overflow-auto">
                     {/* Card Wrapper */}
                     <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                        <h1 className="text-2xl font-bold mb-4">Manage Role Permissions</h1> 
+                        <h1 className="text-2xl font-bold mb-4">{t('title')}</h1> 
 
                         {/* Role Selection */}
                         <div className="mb-4">
-                            <label className="block font-medium mb-1">Select Role</label>
+                            <label className="block font-medium mb-1">{t('Select Role')}</label>
                             <select
                                 className="w-full p-2 border rounded"
                                 value={selectedRole || ''}
                                 onChange={(e) => handleRoleChange(Number(e.target.value))}
                             >
-                                <option value="">Select a Role</option>
+                                <option value="">{t('Select Role')}</option>
                                 {roles.map((role) => (
                                     <option key={role.id} value={role.id}>
                                         {role.name}
@@ -131,7 +131,7 @@ const RolePermissionManager: React.FC = () => {
                             onClick={handleSave}
                             className="px-4 py-2 bg-blue-500 text-white rounded"
                         >
-                            Save Permissions
+                            {t('Save Permissions')}
                         </button>
                     </div>
                 </div>
