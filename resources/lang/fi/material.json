@@ -1,0 +1,25 @@
+{
+    "title": "Materiaali",
+    "Offer": "Tarjous",
+    "Request": "Pyyntö",
+    "create": {
+        "title": "Luo materiaali"
+    },
+    "form": {
+        "title": "Otsikko",
+        "Category": "Kategoria",
+        "Select a category": "Valitse kategoria",
+        "Cost/Unit": "Hinta/Yksikkö",
+        "Quantity": "Määrä",
+        "State": "Osavaltio",
+        "Select a state": "Valitse osavaltio",
+        "City": "Kaupunki",
+        "Warranty": "Takuu (valinnainen)",
+        "Image": "Kuva",
+        "Description": "Kuvaus",
+        "Product Images": "Tuotekuvat",
+        "Submit": "Lähetä",
+        "Preview Offer": "Esikatsele tarjous",
+        "Invite by Email": "Kutsu sähköpostilla"
+    } 
+}
