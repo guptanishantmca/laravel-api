@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\RoleMiddleware::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+
+             // Add this line to include CSRF verification
+             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+             //\Illuminate\Session\Middleware\StartSession::class,            // Session Middleware
         ]);
 
         $middleware->alias([

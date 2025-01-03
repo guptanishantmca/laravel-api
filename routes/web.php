@@ -107,24 +107,28 @@ Route::middleware([SetLocale::class])->group(function () {
     // Add your other routes here...
     
 
-Route::post('/switch-language', function (Request $request) {
-    $locale = $request->input('locale');
+// Route::post('/switch-language', function (Request $request) {
+//     $locale = $request->input('locale');
 
-    if (!in_array($locale, ['en', 'fi'])) {
-        abort(400, 'Invalid locale');
-    }
+//     if (!in_array($locale, ['en', 'fi'])) {
+//         abort(400, 'Invalid locale');
+//     }
 
-    // Set locale for the current request
-    \App::setLocale($locale);
+//     // Optionally, persist the locale in the session or a cookie
+//     session(['locale' => $locale]);
 
-    // Optionally, persist the locale in the session or a cookie
-    session(['locale' => $locale]);
 
-    return response()->json(['message' => 'Language switched to ' . $locale]);
+//     // Set locale for the current request
+//     \App::setLocale($locale);
+
+    
+//     return response()->json(['message' => 'Language switched to ' . $locale]);
+// });
+
 });
-
+Route::middleware(['web'])->group(function () {
+    Route::post('/switch-language', [LocalizationController::class, 'switchLanguage'])->name('switch-language');
 });
-//Route::post('/switch-language', [LocalizationController::class, 'switch']);
 
 
 Route::get('/localization/{locale}/{namespace}', function ($locale, $namespace) {

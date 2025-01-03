@@ -38,4 +38,18 @@ class LocalizationController extends Controller
 
         return response()->json(['message' => 'Language switched to ' . $locale]);
     }
+
+    public function switchLanguage(Request $request)
+    {
+        $locale = $request->input('locale');
+
+        if (!in_array($locale, ['en', 'fi'])) {
+            return response()->json(['error' => 'Invalid language'], 400);
+        }
+
+        session(['locale' => $locale]);
+        App::setLocale($locale);
+
+        return response()->json(['success' => true, 'locale' => $locale]);
+    }
 }
