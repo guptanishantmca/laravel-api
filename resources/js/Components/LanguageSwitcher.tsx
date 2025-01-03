@@ -25,16 +25,19 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ currentNamespaces  
     // };
     const changeLanguage = async (locale: string) => {
         try {
+            const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content;
+console.log('csrfToken',csrfToken);
             const response = await fetch('/switch-language', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+                    'X-CSRF-TOKEN': csrfToken || '',
                 },
                 body: JSON.stringify({ locale }),
             });
 
             if (!response.ok) {
+                window.location.reload();
                 throw new Error('Failed to switch language');
             }
 
@@ -52,6 +55,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ currentNamespaces  
             // Reload the page to apply the new locale
           //   window.location.reload();
         } catch (error) {
+            
             console.error('Error switching language:', error);
         }
     };
