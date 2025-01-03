@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import { router } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
+import useLoadNamespaces from '../../../hooks/useLoadNamespaces';
 interface MaterialFormProps {
     material: any; // Define a specific type if possible
     onSubmit: (e: React.FormEvent) => void;
@@ -10,7 +12,8 @@ interface MaterialFormProps {
 }
 
 const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitUrl, submitMethod ,isEdit}) => {
- 
+    const { t } = useTranslation('material'); // Use the 'dashboard' namespace
+    useLoadNamespaces(['material']);
     const [type, setType] = useState('Offer');
     const [country_id, setCountry] = useState(1);
     // const [formData, setFormData] = useState({
@@ -136,13 +139,13 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                     className={`flex-1 p-2 text-center ${type === 'Offer' ? 'border-b-2 border-blue-500 text-blue-500' : ''}`}
                     onClick={() => setType('Offer')}
                 >
-                    Offer
+                     {t('Offer')} 
                 </button>
                 <button
                     className={`flex-1 p-2 text-center ${type === 'Request' ? 'border-b-2 border-blue-500 text-blue-500' : ''}`}
                     onClick={() => setType('Request')}
                 >
-                    Request
+                     {t('Request')} 
                 </button>
             </div>
 
@@ -153,7 +156,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                     <input type='hidden' name='type' value={type} />
                     <input type='hidden' name='country_id' value={country_id} />
                     <div>
-                        <label className="block mb-2">Title</label>
+                        <label className="block mb-2">{t('form.title')} </label>
                         <input
                             type="text"
                             name="title"
@@ -163,7 +166,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             required
                         />
 
-                        <label className="block mt-4 mb-2">Category</label>
+                        <label className="block mt-4 mb-2">{t('form.Category')}</label>
                          
                         <select
                 name="category_id"
@@ -171,14 +174,14 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded"
             >
-                <option value="">Select a category</option>
+                <option value="">{t('form.Select a category')}</option>
                 {categories.map((category: any) => (
                     <option key={category.id} value={category.id}>
                         {category.name}
                     </option>
                 ))}
             </select> 
-                        <label className="block mt-4 mb-2">Cost/Unit</label>
+                        <label className="block mt-4 mb-2">{t('form.Cost/Unit')}</label>
                         <div className="flex items-center space-x-2">
                             <input
                                 type="number"
@@ -203,7 +206,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             </select>
                         </div>
 
-                        <label className="block mt-4 mb-2">Quantity</label>
+                        <label className="block mt-4 mb-2">{t('form.Quantity')}</label>
                         <input
                             type="number"
                             name="quantity"
@@ -215,14 +218,14 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
 
                     {/* Right Side */}
                     <div>
-                        <label className="block mb-2">State</label>
+                        <label className="block mb-2">{t('form.State')}</label>
                         <select
                 name="state_id"
                 value={formData.state_id || ''}
                 onChange={handleInputChange}
                 className="w-full p-2 border rounded"
             >
-                <option value="">Select a state</option>
+                <option value="">{t('form.Select a state')}</option>
                 {states.map((state: any) => (
                     <option key={state.id} value={state.id}>
                         {state.name}
@@ -230,7 +233,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                 ))}
             </select> 
 
-                        <label className="block mt-4 mb-2">City</label>
+                        <label className="block mt-4 mb-2">{t('form.City')}</label>
                         <input
                             type="text"
                             name="city"
@@ -239,7 +242,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             className="w-full p-2 border rounded"
                         />
 
-                        <label className="block mt-4 mb-2">Warranty (Optional)</label>
+                        <label className="block mt-4 mb-2">{t('form.Warranty')}</label>
                         <input
                             type="number"
                             name="warranty"
@@ -248,7 +251,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             className="w-full p-2 border rounded"
                         />
 
-                        <label className="block mt-4 mb-2">Main Image</label>
+                        <label className="block mt-4 mb-2">{t('form.Image')} </label>
                         <input
                             type="file"
                             name="main_image"
@@ -259,7 +262,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                 </div>
 
                 {/* Additional Fields */}
-                <label className="block mt-4 mb-2">Description</label>
+                <label className="block mt-4 mb-2">{t('form.Description')}</label>
                 <textarea
                     name="description"
                     value={formData.description || ''}
@@ -267,7 +270,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                     className="w-full p-2 border rounded"
                 />
 
-                <label className="block mt-4 mb-2">Product Images</label>
+                <label className="block mt-4 mb-2">{t('form.Product Images')}</label>
                 <input
                     type="file"
                     name="product_images"
@@ -282,19 +285,19 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                         type="submit"
                         className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
                     >
-                        Submit
+                        {t('form.Submit')}
                     </button>
                     <button
                         type="button"
                         className="px-4 py-2 text-gray-700 border rounded hover:bg-gray-100"
                     >
-                        Preview Offer
+                        {t('form.Preview Offer')}
                     </button>
                     <button
                         type="button"
                         className="px-4 py-2 text-gray-700 border rounded hover:bg-gray-100"
                     >
-                        Invite by Email
+                        {t('form.Invite by Email')}
                     </button>
                 </div>
             </form>
