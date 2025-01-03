@@ -1,0 +1,29 @@
+{
+    "title" : "Material",
+    "Offer" : "Offer",
+    "Request": "Request",
+    "create":
+    {
+        "title" : "Create Material" 
+    },
+    "form":
+    {
+        "title":"Title",
+        "Category":"Category",
+        "Select a category":"Select a category",
+        "Cost/Unit":"Cost/Unit",
+        "Quantity":"Quantity",
+        "State":"State",
+        "Select a state":"Select a state",
+        "City":"City",
+        "Warranty":"Warranty (Optional)",
+        "Image":"Image",
+        "Description":"Description",
+        "Product Images":"Product Images",
+        "Submit":"Submit",
+        "Preview Offer":"Preview Offer",
+        "Invite by Email":"Invite by Email"
+    },
+    "welcome" : "Welcome to the Admin Panel",
+    "welcome_message" : "This is your admin dashboard where you can manage everything!"
+}

@@ -7,8 +7,8 @@ import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 
 const Create: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }) => {
     const { post, setData } = useForm({});
-    const { t } = useTranslation('dashboard'); // Use the 'dashboard' namespace
-    useLoadNamespaces(['dashboard']);
+    const { t } = useTranslation('material'); // Use the 'dashboard' namespace
+    useLoadNamespaces(['material']);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post('/marketplace/materials');
@@ -18,9 +18,10 @@ const Create: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }
         <AuthenticatedLayout
             currentNamespaces={currentNamespaces}
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
-                {t('dashboard')} {/* Ensure 'dashboard' key exists in translations */}
+                {t('create.title')} {/* Ensure 'dashboard' key exists in translations */}
             </h2>} items={[]}                >
         <div>
+        
              
         <MaterialForm
     material={{}} // Empty object for new material
