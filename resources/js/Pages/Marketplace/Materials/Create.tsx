@@ -20,6 +20,7 @@ const Create: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
                 {t('create.title')} {/* Ensure 'dashboard' key exists in translations */}
             </h2>} items={[]}                >
+            <h1>Create Material</h1>
         <div>
         
              
