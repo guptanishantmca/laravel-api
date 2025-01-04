@@ -101,7 +101,7 @@ const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
         <AuthenticatedLayout
             currentNamespaces={['users']}
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">{t('title')}</h2>} items={[]}        >
-            <div className="flex-1 p-6 overflow-auto">
+            
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <Head title={t('Users List')} />
                     <h1 className="text-2xl font-bold mb-4">{t('users_list')}</h1>
@@ -230,7 +230,7 @@ const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
                     </table>
                     <Pagination links={users.links} total={users.total} />
                 </div>
-            </div>
+             
         </AuthenticatedLayout>
     );
 };

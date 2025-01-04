@@ -18,8 +18,9 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
             currentNamespaces={currentNamespaces}
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
                 {t('edit.title')} {/* Ensure 'dashboard' key exists in translations */}
-            </h2>} items={[]}                ><div>
+            </h2>} items={[]}                >
             {/* <h1>{t('edit.title')}</h1> */}
+             
             <MaterialForm
     material={material}
     onSubmit={handleSubmit}
@@ -28,7 +29,7 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
     isEdit={true}
 />
 
-        </div></AuthenticatedLayout>
+        </AuthenticatedLayout>
     );
 };
 

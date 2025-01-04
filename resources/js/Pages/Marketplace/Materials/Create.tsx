@@ -21,7 +21,7 @@ const Create: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }
                 {t('create.title')} {/* Ensure 'dashboard' key exists in translations */}
             </h2>} items={[]}                >
             {/* <h1>Create Material</h1> */}
-        <div>
+         
         
              
         <MaterialForm
@@ -32,7 +32,7 @@ const Create: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespaces }
     isEdit={false}
 />
 
-        </div></AuthenticatedLayout>
+       </AuthenticatedLayout>
     );
 };
 
