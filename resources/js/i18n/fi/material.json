@@ -5,6 +5,9 @@
     "create": {
         "title": "Luo materiaali"
     },
+    "edit": {
+        "title": "Muokata materiaali"
+    },
     "form": {
         "title": "Otsikko",
         "Category": "Kategoria",
