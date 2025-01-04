@@ -5,6 +5,9 @@
     "create": {
         "title": "Create Material"
     },
+    "edit": {
+        "title": "Edit Material"
+    },
     "form": {
         "title": "Title",
         "Category": "Category",
