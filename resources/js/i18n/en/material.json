@@ -21,7 +21,5 @@
         "Submit": "Submit",
         "Preview Offer": "Preview Offer",
         "Invite by Email": "Invite by Email"
-    },
-    "welcome": "Welcome to the Admin Panel",
-    "welcome_message": "This is your admin dashboard where you can manage everything!"
+    }
 }

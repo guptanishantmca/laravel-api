@@ -297,7 +297,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                         type="button"
                         className="px-4 py-2 text-gray-700 border rounded hover:bg-gray-100"
                     >
-                        {t('form.Invite by Email')}
+                        {t('form.Preview Offer')}
                     </button>
                 </div>
             </form>
