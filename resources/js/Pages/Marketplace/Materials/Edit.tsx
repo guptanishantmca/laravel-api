@@ -19,7 +19,7 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
             header={<h2 className="text-xl font-semibold leading-tight text-gray-800">
                 {t('edit.title')} {/* Ensure 'dashboard' key exists in translations */}
             </h2>} items={[]}                ><div>
-            <h1>{t('edit.title')}</h1>
+            {/* <h1>{t('edit.title')}</h1> */}
             <MaterialForm
     material={material}
     onSubmit={handleSubmit}
