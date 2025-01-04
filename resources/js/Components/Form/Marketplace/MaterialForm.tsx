@@ -132,7 +132,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
     
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+        <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
             {/* Tabs for Offer and Request */}
             <div className="flex mb-4 border-b">
                 <button
