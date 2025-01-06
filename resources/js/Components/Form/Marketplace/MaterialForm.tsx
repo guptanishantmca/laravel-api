@@ -133,19 +133,19 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
 
     return (
         <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-            {/* Tabs for Offer and Request */}
-            <div className="flex mb-4 border-b">
+            {/* Type Selection */}
+            <div className="flex mb-6">
                 <button
-                    className={`flex-1 p-2 text-center ${type === 'Offer' ? 'border-b-2 border-blue-500 text-blue-500' : ''}`}
+                    className={`flex-1 p-3 text-center ${type === 'Offer' ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}
                     onClick={() => setType('Offer')}
                 >
-                     {t('Offer')} 
+                    {t('Offer')}
                 </button>
                 <button
-                    className={`flex-1 p-2 text-center ${type === 'Request' ? 'border-b-2 border-blue-500 text-blue-500' : ''}`}
+                    className={`flex-1 p-3 text-center ${type === 'Request' ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}
                     onClick={() => setType('Request')}
                 >
-                     {t('Request')} 
+                    {t('Request')}
                 </button>
             </div>
 
