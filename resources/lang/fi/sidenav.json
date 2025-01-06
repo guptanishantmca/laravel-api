@@ -1,7 +1,6 @@
 {
-    "dashboard" : "FI Dashboard",
-    "users" : "FI Users",
-    "all_users" : "FI All Users",
-    "create_users" : "FI Create Users"
-    
+    "dashboard": "Kojelauta",
+    "users": "Käyttäjät",
+    "all_users": "Kaikki käyttäjät",
+    "create_users": "Luo käyttäjiä"
 }
