@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePage, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +38,9 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
 }) => {
     const { t } = useTranslation('material');
     useLoadNamespaces(['material']);
-
+    useEffect(() => {
+        document.title = t('title'); // Dynamically set the title
+    }, [t]);
     return (
         <AuthenticatedLayout
             currentNamespaces={currentNamespaces}
