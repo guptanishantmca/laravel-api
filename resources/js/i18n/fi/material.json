@@ -3,6 +3,7 @@
     "Offer": "Tarjous",
     "Request": "Pyyntö",
     "create_new_material": "Luo uusi materiaali",
+    "edit_button": "Muokkaa",
     "create": {
         "title": "Luo materiaali"
     },
