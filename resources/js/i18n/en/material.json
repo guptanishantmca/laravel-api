@@ -2,6 +2,7 @@
     "title": "Material",
     "Offer": "Offer",
     "Request": "Request",
+    "create_new_material": "Create new material",
     "create": {
         "title": "Create Material"
     },
