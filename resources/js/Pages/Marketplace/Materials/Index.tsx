@@ -36,15 +36,15 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
     currentNamespaces,
     materials,
 }) => {
-    const { t } = useTranslation('dashboard');
-    useLoadNamespaces(['dashboard']);
+    const { t } = useTranslation('material');
+    useLoadNamespaces(['material']);
 
     return (
         <AuthenticatedLayout
             currentNamespaces={currentNamespaces}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {t('dashboard')}
+                    {t('material')}
                 </h2>
             }
             items={[]}
@@ -52,8 +52,8 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <div className="p-6">
-                        <Head title={t('Users List')} />
-                        <h1 className="text-2xl font-bold mb-4">{t('materials')}</h1>
+                        <Head title={t('title')} />
+                        <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
                         <Link
                             href={route('materials.create')}
                             className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

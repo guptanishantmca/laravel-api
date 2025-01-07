@@ -2,6 +2,7 @@
     "title": "Materiaali",
     "Offer": "Tarjous",
     "Request": "Pyyntö",
+    "create_new_material":"Luo uusi materiaali",
     "create": {
         "title": "Luo materiaali"
     },
