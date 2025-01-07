@@ -3,6 +3,7 @@
     "Offer" : "Offer",
     "Request": "Request",
     "create_new_material":"Create new material",
+    "edit_button":"Edit",
     "create":
     {
         "title" : "Create Material" 

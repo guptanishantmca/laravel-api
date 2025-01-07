@@ -87,7 +87,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
                                                     href={`/marketplace/materials/${material.id}/edit`}
                                                     className="text-blue-500 hover:underline"
                                                 >
-                                                    {t('edit')}
+                                                    {t('edit_button')}
                                                 </Link>
                                             </td>
                                         </tr>
