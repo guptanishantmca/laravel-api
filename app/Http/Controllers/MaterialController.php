@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateMaterialRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class MaterialController extends Controller
 {
@@ -29,17 +31,49 @@ class MaterialController extends Controller
     }
 
     // Store Material
+    
     public function store(StoreMaterialRequest $request)
     {
-        
         $validated = $request->validated();
+
+        // Ensure the 'materials' directory exists
+        if (!Storage::exists('materials')) {
+            Storage::makeDirectory('materials');
+        }
+
+        // Handle featured_image upload
+        if ($request->hasFile('featured_image')) {
+            $validated['featured_image'] = $request->file('featured_image')->store('materials');
+        }
+
+        // Ensure the 'materials/slider' directory exists
+        if (!Storage::exists('materials/slider')) {
+            Storage::makeDirectory('materials/slider');
+        }
+
+        // Handle slider_images upload
+        if ($request->hasFile('slider_images')) {
+            $sliderImages = [];
+            foreach ($request->file('slider_images') as $image) {
+                $path = $image->store('materials/slider');
+                $sliderImages[] = $path;
+            }
+            $validated['slider_images'] = json_encode($sliderImages);
+        }
 
         // Assign user_id from the authenticated user
         $validated['user_id'] = Auth::id();
         $validated['category_type'] = 'Material';
+
+        // Create the Material
         Material::create($validated);
+
         return response()->json(['message' => 'Material created successfully'], 201);
     }
+
+
+
+
 
     // Show Edit Form
     public function edit(Material $material)

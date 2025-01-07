@@ -101,8 +101,12 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
-        setFormData({ ...formData, [name]: files });
+        if (files) {
+            setFormData({ ...formData, [name]: files });
+        }
     };
+    
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -110,7 +114,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
         const formElement = e.target as HTMLFormElement;
         const data = new FormData(formElement);
     
-        // Add `_method` to mimic PUT request
+        // Add `_method` to mimic PUT request if editing
         if (isEdit) {
             data.append('_method', 'PUT');
         }
@@ -129,6 +133,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
             }
         }
     };
+    
     
 
     return (
@@ -254,7 +259,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                         <label className="block mt-4 mb-2">{t('form.Image')} </label>
                         <input
                             type="file"
-                            name="main_image"
+                            name="featured_image"
                             onChange={handleFileChange}
                             className="w-full p-2 border rounded"
                         />
@@ -273,7 +278,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                 <label className="block mt-4 mb-2">{t('form.Product Images')}</label>
                 <input
                     type="file"
-                    name="product_images"
+                    name="slider_images[]"
                     multiple
                     onChange={handleFileChange}
                     className="w-full p-2 border rounded"
