@@ -37,25 +37,27 @@ class MaterialController extends Controller
         $validated = $request->validated();
 
         // Ensure the 'materials' directory exists
-        if (!Storage::exists('materials')) {
-            Storage::makeDirectory('materials');
+        $userDir = 'uploads/' . auth()->id() . '/materials';
+        if (!Storage::exists($userDir)) {
+            Storage::makeDirectory($userDir);
         }
 
         // Handle featured_image upload
         if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')->store('materials');
+            $validated['featured_image'] = $request->file('featured_image')->store($userDir);
         }
 
+        $userDir = 'uploads/' . auth()->id() . '/materials/slider_images';
         // Ensure the 'materials/slider' directory exists
-        if (!Storage::exists('materials/slider')) {
-            Storage::makeDirectory('materials/slider');
+        if (!Storage::exists($userDir)) {
+            Storage::makeDirectory($userDir);
         }
 
         // Handle slider_images upload
         if ($request->hasFile('slider_images')) {
             $sliderImages = [];
             foreach ($request->file('slider_images') as $image) {
-                $path = $image->store('materials/slider');
+                $path = $image->store($userDir);
                 $sliderImages[] = $path;
             }
             $validated['slider_images'] = json_encode($sliderImages);
