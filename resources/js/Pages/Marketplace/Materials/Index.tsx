@@ -39,14 +39,14 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
     const { t } = useTranslation('material');
     useLoadNamespaces(['material']);
     useEffect(() => {
-        document.title = t('title'); // Dynamically set the title
+        document.title = t('title');  // Dynamically set the title
     }, [t]);
     return (
         <AuthenticatedLayout
             currentNamespaces={currentNamespaces}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {t('material')}
+                    {t('title')}
                 </h2>
             }
             items={[]}
@@ -54,7 +54,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <div className="p-6">
-                        <Head title={t('title')} />
+                  <Head title={t('title')} />
                         <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
                         <Link
                             href={route('materials.create')}
