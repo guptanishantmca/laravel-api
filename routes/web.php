@@ -31,6 +31,8 @@ Route::get('/categories', [CategoryController::class, 'getCategories']);
 
 Route::prefix('mybusniess/filemanager')->middleware(['auth'])->group(function () {
     Route::get('/', [FileManagerController::class, 'index'])->name('filemanager.index');
+    Route::get('/get_files', [FileManagerController::class, 'get_files'])->name('filemanager.get_files');
+    
     Route::post('/folder', [FileManagerController::class, 'createFolder']);
     Route::delete('/folder/{id}', [FileManagerController::class, 'deleteFolder']);
     Route::post('/upload', [FileManagerController::class, 'upload']);

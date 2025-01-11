@@ -37,7 +37,7 @@ class MaterialController extends Controller
         $validated = $request->validated();
 
         // Ensure the 'materials' directory exists
-        $userDir = 'uploads/' . auth()->id() . '/materials';
+        $userDir = 'uploads/folders/' . auth()->id() . '/materials';
         if (!Storage::exists($userDir)) {
             Storage::makeDirectory($userDir);
         }
@@ -47,7 +47,7 @@ class MaterialController extends Controller
             $validated['featured_image'] = $request->file('featured_image')->store($userDir);
         }
 
-        $userDir = 'uploads/' . auth()->id() . '/materials/slider_images';
+        $userDir = 'uploads/folders/' . auth()->id() . '/materials/slider_images';
         // Ensure the 'materials/slider' directory exists
         if (!Storage::exists($userDir)) {
             Storage::makeDirectory($userDir);
