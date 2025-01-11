@@ -25,6 +25,13 @@ class FileManagerController extends Controller
         ]);
     }
 
+    public function get_files()
+    {
+        $files = FileManager::where('uploaded_by', auth()->id())->get();
+
+        return response()->json($files);
+    }
+
 
     public function upload(Request $request)
     {
@@ -34,8 +41,9 @@ class FileManagerController extends Controller
         ]);
 
         $folderId = $request->input('folder_id');
+        $user_id = auth()->id();
             // Determine the folder path
-            $folderPath = $folderId ? "folders/$folderId" : "files";
+            $folderPath = $folderId ? "uploads/folders/$user_id/$folderId" : "uploads/files/$user_id";
 
         foreach ($request->file('files') as $file) {
 
@@ -64,8 +72,9 @@ class FileManagerController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
+        $user_id = auth()->id();
         $parentId = $request->input('parent_id', null);
-        $folderPath = $parentId ? "folders/$parentId" : "root";
+        $folderPath = $parentId ? "uploads/folders/$user_id/$parentId" : "uploads/folders/$user_id";
 
         // Create the directory if it doesn't exist
         if (!Storage::disk('public')->exists($folderPath)) {
