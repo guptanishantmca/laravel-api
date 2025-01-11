@@ -3,6 +3,7 @@ import axios from 'axios';
 import { router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '../../../hooks/useLoadNamespaces';
+import FileManagerPopup from '@/Pages/MyBusiness/FileManager/FileManagerPopup';
 interface MaterialFormProps {
     material: any; // Define a specific type if possible
     onSubmit: (e: React.FormEvent) => void;
@@ -51,7 +52,8 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
     }));
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState('');
- 
+    const [showFileManager, setShowFileManager] = useState(false); // State for showing the file manager
+
     const [states, setStates] = useState([]);
     const [categories, setCategories] = useState([]);
     
@@ -99,6 +101,12 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
         setFormData({ ...formData, [name]: value });
     };
 
+    // Handle File Selection from File Manager
+    const handleFileSelect = (filePath: string) => {
+        setFormData({ ...formData, main_image: filePath });
+        setShowFileManager(false);
+    };
+    
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
         if (files) {
@@ -263,6 +271,13 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             onChange={handleFileChange}
                             className="w-full p-2 border rounded"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowFileManager(true)}
+                            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                            {t('Select from File Manager')}
+                        </button>
                     </div>
                 </div>
 
@@ -306,6 +321,13 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                     </button>
                 </div>
             </form>
+            {/* File Manager Popup */}
+            {showFileManager && (
+                <FileManagerPopup
+                    onClose={() => setShowFileManager(false)}
+                    onFileSelect={handleFileSelect}
+                />
+            )}
         </div>
     );
 };
