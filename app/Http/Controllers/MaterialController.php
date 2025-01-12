@@ -37,31 +37,31 @@ class MaterialController extends Controller
         $validated = $request->validated();
 
         // Ensure the 'materials' directory exists
-        $userDir = 'uploads/folders/' . auth()->id() . '/materials';
-        if (!Storage::exists($userDir)) {
-            Storage::makeDirectory($userDir);
-        }
+        // $userDir = 'uploads/folders/' . auth()->id() . '/materials';
+        // if (!Storage::exists($userDir)) {
+        //     Storage::makeDirectory($userDir);
+        // }
 
-        // Handle featured_image upload
-        if ($request->hasFile('featured_image')) {
-            $validated['featured_image'] = $request->file('featured_image')->store($userDir);
-        }
+        // // Handle featured_image upload
+        // if ($request->hasFile('featured_image')) {
+        //     $validated['featured_image'] = $request->file('featured_image')->store($userDir);
+        // }
 
-        $userDir = 'uploads/folders/' . auth()->id() . '/materials/slider_images';
-        // Ensure the 'materials/slider' directory exists
-        if (!Storage::exists($userDir)) {
-            Storage::makeDirectory($userDir);
-        }
+        // $userDir = 'uploads/folders/' . auth()->id() . '/materials/slider_images';
+        // // Ensure the 'materials/slider' directory exists
+        // if (!Storage::exists($userDir)) {
+        //     Storage::makeDirectory($userDir);
+        // }
 
-        // Handle slider_images upload
-        if ($request->hasFile('slider_images')) {
-            $sliderImages = [];
-            foreach ($request->file('slider_images') as $image) {
-                $path = $image->store($userDir);
-                $sliderImages[] = $path;
-            }
-            $validated['slider_images'] = json_encode($sliderImages);
-        }
+        // // Handle slider_images upload
+        // if ($request->hasFile('slider_images')) {
+        //     $sliderImages = [];
+        //     foreach ($request->file('slider_images') as $image) {
+        //         $path = $image->store($userDir);
+        //         $sliderImages[] = $path;
+        //     }
+        //     $validated['slider_images'] = json_encode($sliderImages);
+        // }
 
         // Assign user_id from the authenticated user
         $validated['user_id'] = Auth::id();

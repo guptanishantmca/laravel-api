@@ -30,7 +30,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
     //     state_id: '',
     //     city: '',
     //     warranty: '',
-    //     main_image: null,
+    //     featured_image: null,
     //     product_images: [],
     // });
     const [formData, setFormData] = useState(() => ({
@@ -46,14 +46,17 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
         state_id: '',
         city: '',
         warranty: '',
-        main_image: null,
+        featured_image: null,
         product_images: [],
         ...material,
     }));
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [successMessage, setSuccessMessage] = useState('');
-    const [showFileManager, setShowFileManager] = useState(false); // State for showing the file manager
-
+    const [showFeaturedImageManager, setShowFeaturedImageManager] = useState(false); // State for showing the file manager
+ 
+    const [showSliderImageManager, setShowSliderImageManager] = useState(false);
+    const [selectedSliderImages, setSelectedSliderImages] = useState<string[]>([]);
+    const [selectedImages, setSelectedImages] = useState<string[]>([]); 
     const [states, setStates] = useState([]);
     const [categories, setCategories] = useState([]);
     
@@ -61,6 +64,11 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
     useEffect(() => {
         setFormData({
             ...material,
+            slider_images: material.slider_images
+            ? Array.isArray(material.slider_images)
+                ? material.slider_images
+                : JSON.parse(material.slider_images)
+            : [],
         });
     }, [material]);
 
@@ -102,10 +110,22 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
     };
 
     // Handle File Selection from File Manager
-    const handleFileSelect = (filePath: string) => {
-        setFormData({ ...formData, main_image: filePath });
-        setShowFileManager(false);
+    // const handleFileSelect = (filePath: string) => {
+    //     setSelectedImages((prevImages) => [...prevImages, filePath]); // ✅ Add the selected image to the array
+    //     setShowFeaturedImageManager(false);
+    // };
+
+    const handleFeaturedImageSelect = (filePath: string) => {
+        setFormData({ ...formData, featured_image: filePath });
+        setShowFeaturedImageManager(false);
     };
+
+     // Handle file selection for Slider Images
+     const handleSliderImageSelect = (filePath: string) => {
+        setSelectedSliderImages((prevImages) => [...prevImages, filePath]);
+        setShowSliderImageManager(false);
+    };
+    
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
         if (files) {
@@ -120,7 +140,15 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
     
         const formElement = e.target as HTMLFormElement;
         const data = new FormData(formElement);
+    console.log('data',data);
+        if (formData.featured_image) {
+            data.append('featured_image', formData.featured_image);
+        }
     
+        // Add selected product images
+      
+        data.append('slider_images', JSON.stringify(selectedSliderImages));
+
         // Add `_method` to mimic PUT request if editing
         if (isEdit) {
             data.append('_method', 'PUT');
@@ -174,7 +202,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             name="title"
                             value={formData.title || ''}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded border-gray-300"
                             required
                         />
 
@@ -184,7 +212,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                 name="category_id"
                 value={formData.category_id || ''}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded border-gray-300"
             >
                 <option value="">{t('form.Select a category')}</option>
                 {categories.map((category: any) => (
@@ -200,13 +228,13 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                                 name="cost_per_unit"
                                 value={formData.cost_per_unit || ''}
                                 onChange={handleInputChange}
-                                className="w-2/3 p-2 border rounded"
+                                className="w-2/3 p-2 border rounded border-gray-300"
                             />
                             <select
                                 name="unit"
                                 value={formData.unit || ''}
                                 onChange={handleInputChange}
-                                className="w-1/3 p-2 border rounded"
+                                className="w-1/3 p-2 border rounded border-gray-300"
                             >
                                 <option value="">Select</option>
                                 <option value="Kg">Kg</option>
@@ -224,7 +252,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             name="quantity"
                             value={formData.quantity || ''}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded border-gray-300"
                         />
                     </div>
 
@@ -235,7 +263,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                 name="state_id"
                 value={formData.state_id || ''}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded border-gray-300"
             >
                 <option value="">{t('form.Select a state')}</option>
                 {states.map((state: any) => (
@@ -251,7 +279,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             name="city"
                             value={formData.city || ''}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded border-gray-300"
                         />
 
                         <label className="block mt-4 mb-2">{t('form.Warranty')}</label>
@@ -260,23 +288,44 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                             name="warranty"
                             value={formData.warranty || ''}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded border-gray-300"
                         />
 
                         <label className="block mt-4 mb-2">{t('form.Image')} </label>
-                        <input
+                        {/* <input
                             type="file"
                             name="featured_image"
                             onChange={handleFileChange}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded border-gray-300"
                         />
                         <button
                             type="button"
-                            onClick={() => setShowFileManager(true)}
+                            onClick={() => setShowFeaturedImageManager(true)}
+                            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                            {t('Select from File Manager')}
+                        </button> */}
+                        
+                        <button
+                            type="button"
+                            onClick={() => setShowFeaturedImageManager(true)}
                             className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
                             {t('Select from File Manager')}
                         </button>
+                        {formData.featured_image && (
+                        <img src={`/storage/${formData.featured_image}`} alt="Featured" className="mb-4 w-32 h-32 object-cover" />
+                    )}
+                        {/* Display selected images */}
+                        <div className="mt-4">
+                            {selectedImages.length > 0 &&
+                                selectedImages.map((img, index) => (
+                                    <div key={index} className="flex items-center space-x-2 mb-2">
+                                        <img src={img} alt={`Selected ${index}`} width="100" />
+                                        <span>{img}</span>
+                                    </div>
+                                ))}
+                        </div>
                     </div>
                 </div>
 
@@ -286,18 +335,43 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                     name="description"
                     value={formData.description || ''}
                     onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded border-gray-300"
                 />
 
                 <label className="block mt-4 mb-2">{t('form.Product Images')}</label>
-                <input
+                {/* <input
                     type="file"
                     name="slider_images[]"
                     multiple
                     onChange={handleFileChange}
-                    className="w-full p-2 border rounded"
-                />
+                    className="w-full p-2 border rounded border-gray-300"
+                /> */}
+<button
+                        type="button"
+                        onClick={() => setShowSliderImageManager(true)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                        {t('Select Slider Images')}
+                    </button>
+                    {Array.isArray(formData.slider_images) &&
+                        formData.slider_images.map((img, index) => (
+                            <div key={index} className="flex items-center space-x-2 mb-2">
+                                <img src={`/storage/${img}`} alt={`Slider Image ${index}`} width="100" />
+                                <span>{img}</span>
+                            </div>
+                        ))}
 
+
+                    <div className="mt-4">
+                    
+                        {selectedSliderImages.length > 0 &&
+                            selectedSliderImages.map((img, index) => (
+                                <div key={index} className="flex items-center space-x-2 mb-2">
+                                    <img src={`/storage/${img}`} alt={`Slider ${index}`} width="100" />
+                                    <span>{img}</span>
+                                </div>
+                            ))}
+                    </div>
                 {/* Submit Button */}
                 <div className="mt-6 flex space-x-4">
                     <button
@@ -321,10 +395,17 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                 </div>
             </form>
             {/* File Manager Popup */}
-            {showFileManager && (
+            {showFeaturedImageManager && (
                 <FileManagerPopup
-                    onClose={() => setShowFileManager(false)}
-                    onFileSelect={handleFileSelect}
+                    onClose={() => setShowFeaturedImageManager(false)}
+                    onFileSelect={handleFeaturedImageSelect}
+                />
+            )}
+
+            {showSliderImageManager && (
+                <FileManagerPopup
+                    onClose={() => setShowSliderImageManager(false)}
+                    onFileSelect={handleSliderImageSelect}
                 />
             )}
         </div>
