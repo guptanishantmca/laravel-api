@@ -44,7 +44,7 @@ const FileManagerPopup: React.FC<FileManagerPopupProps> = ({ onClose, onFileSele
         setUploading(true);
         setUploadProgress(0);
         const formData = new FormData();
-        formData.append('file', selectedFile);
+        formData.append('featured_image', selectedFile);
 
         axios.post('/mybusniess/filemanager/upload_file', formData, {
             onUploadProgress: (progressEvent) => {
