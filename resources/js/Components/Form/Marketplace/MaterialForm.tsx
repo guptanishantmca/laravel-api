@@ -106,7 +106,6 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
         setFormData({ ...formData, main_image: filePath });
         setShowFileManager(false);
     };
-    
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
         if (files) {

@@ -27,9 +27,31 @@ class FileManagerController extends Controller
 
     public function get_files()
     {
-        $files = FileManager::where('uploaded_by', auth()->id())->get();
+        
+        $files = FileManager::where('uploaded_by', auth()->id())->orderBy('id','desc')->get();
 
         return response()->json($files);
+    }
+
+    public function uploadFile(Request $request)
+    {
+        $user_id = auth()->id();
+        $folderPath =  "uploads/files/$user_id";
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            
+            $path = $file->store($folderPath, 'public');
+            FileManager::create([
+                'name' => $file->getClientOriginalName(),
+                'path' => $path,
+                'type' => $file->getClientMimeType(),
+                 
+                'uploaded_by' => auth()->id(),
+            ]);
+            return response()->json(['filePath' => $path], 201);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
     }
 
 

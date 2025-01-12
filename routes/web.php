@@ -36,6 +36,7 @@ Route::prefix('mybusniess/filemanager')->middleware(['auth'])->group(function ()
     Route::post('/folder', [FileManagerController::class, 'createFolder']);
     Route::delete('/folder/{id}', [FileManagerController::class, 'deleteFolder']);
     Route::post('/upload', [FileManagerController::class, 'upload']);
+    Route::post('/upload_file', [FileManagerController::class, 'uploadFile']);
     Route::delete('/file/{id}', [FileManagerController::class, 'deleteFile']);
 });
 
