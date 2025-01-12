@@ -28,6 +28,8 @@ class UpdateMaterialRequest extends FormRequest
             'delivery_type_cost' => ['nullable', 'string'],
             'delivery_type' => ['nullable', 'string', 'max:50'],
             'expiry_date' => ['nullable', 'date'],
+            'featured_image' => ['nullable', 'string'],
+            'slider_images' => ['nullable', 'string'], 
         ];
     }
 }
