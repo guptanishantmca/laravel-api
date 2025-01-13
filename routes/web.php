@@ -48,6 +48,8 @@ Route::middleware(['auth'])->prefix('marketplace/materials')->name('materials.')
     Route::post('/store', [MaterialController::class, 'store'])->name('store');
     Route::get('/{material}/edit', [MaterialController::class, 'edit'])->name('edit');
     Route::put('/update/{material}', [MaterialController::class, 'update'])->name('update');
+    
+    Route::delete('/{id}', [MaterialController::class, 'destroy'])->name('materials.destroy');
 });
 
 Route::group(['middleware' => ['role_or_permission:Settings|Permissions']], function () {

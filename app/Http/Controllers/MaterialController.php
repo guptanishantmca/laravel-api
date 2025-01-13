@@ -93,4 +93,19 @@ class MaterialController extends Controller
         return redirect()->route('materials.index')
             ->with('success', 'Material updated successfully.');
     }
+
+    public function destroy($id)
+    {
+        
+        $material = Material::findOrFail($id);
+       
+        if ($material->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        $material->delete();
+
+        return redirect()->route('materials.index')->with('success', __('Material deleted successfully.'));
+
+    }
+
 }

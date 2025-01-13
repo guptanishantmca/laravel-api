@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { usePage, Link } from '@inertiajs/react';
+
+import { usePage, Link, router } from '@inertiajs/react';
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
@@ -7,7 +9,6 @@ import { Head } from '@inertiajs/react';
 import Pagination from '@/Components/common/Pagination';
 import { formatDate } from '@/utils/dateFormatter';
 import Table from '@/Components/Table';
-import i18n from '@/i18n';
 
 const statusMap: Record<number, string> = {
     0: "Default",
@@ -21,19 +22,6 @@ const statusMap: Record<number, string> = {
     8: "Accepted",
 };
 
-interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
-
-interface Pagination<T> {
-    current_page: number;
-    data: T[];
-    links: PaginationLink[];
-    total: number;
-}
-
 const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> }> = ({
     currentNamespaces,
     materials,
@@ -42,10 +30,10 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
     useLoadNamespaces(['material']);
 
     useEffect(() => {
-        document.title = t('title');  // Dynamically set the title
+        document.title = t('title');
     }, [t]);
 
-    // Define columns for the Table component
+    // Columns for the table
     const columns = [
         { key: 'id', label: t('ID') },
         { key: 'title', label: t('Name') },
@@ -53,12 +41,20 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
         { key: 'status', label: t('Status') },
     ];
 
+    // Data for the table
     const data = materials.data.map((material: any) => ({
         id: material.id,
         title: material.title,
         created_at: formatDate(material.created_at),
         status: statusMap[material.status] || t('unknown'),
     }));
+
+    // Handle delete
+    const handleDelete = (id: number) => {
+        if (confirm(t('delete_confirm'))) {
+            router.delete(`/marketplace/materials/${id}`);
+        }
+    };
 
     return (
         <AuthenticatedLayout
@@ -86,21 +82,28 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
                         columns={columns}
                         data={data}
                         actions={(row) => (
-                            <Link
-                                href={`/marketplace/materials/${row.id}/edit`}
-                                className="text-blue-500 hover:underline"
-                            >
-                                {t('edit_button')}
-                            </Link>
+                            <div className="flex gap-2">
+                                {/* Edit Button */}
+                                <Link
+                                    href={`/marketplace/materials/${row.id}/edit`}
+                                    className="text-blue-500 hover:underline"
+                                >
+                                    {t('edit_button')}
+                                </Link>
+
+                                {/* Delete Button */}
+                                <button
+                                    onClick={() => handleDelete(row.id)}
+                                    className="text-red-500 hover:underline"
+                                >
+                                    {t('delete_button')}
+                                </button>
+                            </div>
                         )}
                     />
 
-
                     {/* Pagination Component */}
-                    <Pagination
-                        links={materials.links}
-                        total={materials.total}
-                    />
+                    <Pagination links={materials.links} total={materials.total} />
                 </div>
             </div>
         </AuthenticatedLayout>
