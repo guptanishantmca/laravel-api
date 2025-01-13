@@ -4,6 +4,7 @@ import { usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
+import { Head } from '@inertiajs/react';
 
 interface File {
     id: number;
@@ -28,8 +29,9 @@ interface FileManagerProps {
 }
 
 const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder, parentFolderId, currentNamespaces }) => {
-    const { t } = useTranslation('filemanager'); // Use the 'dashboard' namespace
     useLoadNamespaces(['filemanager']);
+    const { t } = useTranslation('filemanager'); // Use the 'dashboard' namespace
+   
     const [newFolderName, setNewFolderName] = useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -77,6 +79,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
             }
             items={[]}
         >
+            <Head title={t('filemanager')} /> 
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <div className="file-manager p-4">
