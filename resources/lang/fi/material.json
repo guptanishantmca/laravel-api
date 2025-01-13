@@ -4,6 +4,9 @@
     "Request": "Pyyntö",
     "create_new_material":"Luo uusi materiaali",
     "edit_button":"Muokkaa",
+    "delete_button":"Poistaa",
+    "delete_confirm": "Are you sure you want to delete this material?",
+    "no_materials_found": "No materials found.",
     "create": {
         "title": "Luo materiaali"
     },
