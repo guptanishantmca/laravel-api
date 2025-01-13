@@ -4,10 +4,13 @@ import MaterialForm from '@/Components/Form/Marketplace/MaterialForm';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
+import { Head } from '@inertiajs/react';
+
 const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ currentNamespaces, material }) => {
     const { put, setData } = useForm(material);
-    const { t } = useTranslation('material'); // Use the 'dashboard' namespace
     useLoadNamespaces(['material']);
+    const { t } = useTranslation('material'); // Use the 'dashboard' namespace
+    
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(`/marketplace/materials/update/${material.id}`);
@@ -20,7 +23,7 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
                 {t('edit.title')} {/* Ensure 'dashboard' key exists in translations */}
             </h2>} items={[]}                >
             {/* <h1>{t('edit.title')}</h1> */}
-             
+            <Head title={t('edit.title')} /> 
             <MaterialForm
     material={material}
     onSubmit={handleSubmit}

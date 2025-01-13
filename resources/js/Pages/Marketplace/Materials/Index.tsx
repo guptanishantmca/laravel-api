@@ -38,9 +38,9 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
     currentNamespaces,
     materials,
 }) => {
-    const { t } = useTranslation('material');
     useLoadNamespaces(['material']);
-
+    const { t } = useTranslation('material');
+    
     useEffect(() => {
         document.title = t('title');
     }, [t]);
@@ -100,7 +100,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
                                 {/* Edit Button */}
                                 <PrimaryButton
                                     onClick={() => router.visit(`/marketplace/materials/${row.id}/edit`)}
-                                    className="bg-green-600 hover:bg-green-700"
+                                    className="  bg-green-700  hover:bg-green-600"
                                 >
                                     {t('edit_button')}
                                 </PrimaryButton>
@@ -108,7 +108,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
                                 {/* Delete Button */}
                                 <PrimaryButton
                                     onClick={() => handleDelete(row.id)}
-                                    className="bg-red-600 hover:bg-red-700"
+                                    className="  bg-red-700  hover:bg-red-600"
                                 >
                                     {t('delete_button')}
                                 </PrimaryButton>
@@ -124,4 +124,4 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
     );
 };
 
-export default Index;
+export default Index; 
