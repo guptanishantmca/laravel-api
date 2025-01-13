@@ -1,14 +1,26 @@
 import React, { useEffect } from 'react';
-
 import { usePage, Link, router } from '@inertiajs/react';
-
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import { Head } from '@inertiajs/react';
 import Pagination from '@/Components/common/Pagination';
+import PrimaryButton from '@/Components/PrimaryButton';
 import { formatDate } from '@/utils/dateFormatter';
 import Table from '@/Components/Table';
+
+interface PaginationData<T> {
+    current_page: number;
+    data: T[];
+    links: PaginationLink[];
+    total: number;
+}
+
+interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
 
 const statusMap: Record<number, string> = {
     0: "Default",
@@ -22,7 +34,7 @@ const statusMap: Record<number, string> = {
     8: "Accepted",
 };
 
-const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> }> = ({
+const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<any> }> = ({
     currentNamespaces,
     materials,
 }) => {
@@ -70,12 +82,14 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <Head title={t('title')} />
                     <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
-                    <Link
-                        href={route('materials.create')}
-                        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+
+                    {/* Use PrimaryButton to create a new material */}
+                    <PrimaryButton
+                        type="button"
+                        onClick={() => router.visit(route('materials.create'))}
                     >
                         {t('create_new_material')}
-                    </Link>
+                    </PrimaryButton>
 
                     {/* Render the Table component */}
                     <Table
@@ -84,20 +98,20 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
                         actions={(row) => (
                             <div className="flex gap-2">
                                 {/* Edit Button */}
-                                <Link
-                                    href={`/marketplace/materials/${row.id}/edit`}
-                                    className="text-blue-500 hover:underline"
+                                <PrimaryButton
+                                    onClick={() => router.visit(`/marketplace/materials/${row.id}/edit`)}
+                                    className="bg-green-600 hover:bg-green-700"
                                 >
                                     {t('edit_button')}
-                                </Link>
+                                </PrimaryButton>
 
                                 {/* Delete Button */}
-                                <button
+                                <PrimaryButton
                                     onClick={() => handleDelete(row.id)}
-                                    className="text-red-500 hover:underline"
+                                    className="bg-red-600 hover:bg-red-700"
                                 >
                                     {t('delete_button')}
-                                </button>
+                                </PrimaryButton>
                             </div>
                         )}
                     />

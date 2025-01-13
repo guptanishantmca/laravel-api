@@ -354,7 +354,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, submitU
                         {t('Select Slider Images')}
                     </button>
                     {Array.isArray(formData.slider_images) &&
-                        formData.slider_images.map((img, index) => (
+                        formData.slider_images.map((img: any, index: number) => (
                             <div key={index} className="flex items-center space-x-2 mb-2">
                                 <img src={`/storage/${img}`} alt={`Slider Image ${index}`} width="100" />
                                 <span>{img}</span>
