@@ -6,7 +6,9 @@ import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import { Head } from '@inertiajs/react';
 import Pagination from '@/Components/common/Pagination';
 import { formatDate } from '@/utils/dateFormatter';
- import i18n from '@/i18n';
+import Table from '@/Components/Table';
+import i18n from '@/i18n';
+
 const statusMap: Record<number, string> = {
     0: "Default",
     1: "Active",
@@ -38,9 +40,26 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
 }) => {
     const { t } = useTranslation('material');
     useLoadNamespaces(['material']);
+
     useEffect(() => {
         document.title = t('title');  // Dynamically set the title
     }, [t]);
+
+    // Define columns for the Table component
+    const columns = [
+        { key: 'id', label: t('ID') },
+        { key: 'title', label: t('Name') },
+        { key: 'created_at', label: t('Created At') },
+        { key: 'status', label: t('Status') },
+    ];
+
+    const data = materials.data.map((material: any) => ({
+        id: material.id,
+        title: material.title,
+        created_at: formatDate(material.created_at),
+        status: statusMap[material.status] || t('unknown'),
+    }));
+
     return (
         <AuthenticatedLayout
             currentNamespaces={currentNamespaces}
@@ -53,57 +72,35 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: Pagination<any> 
         >
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                    <div className="p-6">
-                  <Head title={t('title')} />
-                        <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
-                        <Link
-                            href={route('materials.create')}
-                            className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                        >
-                            {t('create_new_material')}
-                        </Link>
-                        <table className="mt-4 min-w-full bg-white border border-gray-300">
-                            <thead>
-                                <tr>
-                                    <th className="px-4 py-2 border">{t('ID')}</th>
-                                    <th className="px-4 py-2 border">{t('Name')}</th>
-                                    <th className="px-4 py-2 border">{t('Created At')}</th>
-                                    <th className="px-4 py-2 border">{t('Status')}</th>
-                                    <th className="px-4 py-2 border">{t('Actions')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {materials?.data?.length > 0 ? (
-                                    materials.data.map((material: any) => (
-                                        <tr key={material.id}>
-                                            <td className="px-4 py-2 border">{material.id}</td>
-                                            <td className="px-4 py-2 border">{material.title}</td>
-                                            <td className="px-4 py-2 border">{formatDate(material.created_at)} {/* Uses default format */}</td>
-                                            <td className="px-4 py-2 border">
-                                                {statusMap[material.status] || t('unknown')}
-                                            </td>
-                                            <td className="px-4 py-2 border"> 
-                                                <Link
-                                                    href={`/marketplace/materials/${material.id}/edit`}
-                                                    className="text-blue-500 hover:underline"
-                                                >
-                                                    {t('edit_button')}
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan={5}>{t('no_materials_found')}</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                        <Pagination
-                            links={materials.links}
-                            total={materials.total}
-                        />
-                    </div>
+                    <Head title={t('title')} />
+                    <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
+                    <Link
+                        href={route('materials.create')}
+                        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        {t('create_new_material')}
+                    </Link>
+
+                    {/* Render the Table component */}
+                    <Table
+                        columns={columns}
+                        data={data}
+                        actions={(row) => (
+                            <Link
+                                href={`/marketplace/materials/${row.id}/edit`}
+                                className="text-blue-500 hover:underline"
+                            >
+                                {t('edit_button')}
+                            </Link>
+                        )}
+                    />
+
+
+                    {/* Pagination Component */}
+                    <Pagination
+                        links={materials.links}
+                        total={materials.total}
+                    />
                 </div>
             </div>
         </AuthenticatedLayout>
