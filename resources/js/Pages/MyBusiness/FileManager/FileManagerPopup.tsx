@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 
 interface FileManagerPopupProps {
     onClose: () => void;
@@ -7,6 +9,8 @@ interface FileManagerPopupProps {
 }
 
 const FileManagerPopup: React.FC<FileManagerPopupProps> = ({ onClose, onFileSelect }) => {
+    useLoadNamespaces(['filemanager']);
+    const { t } = useTranslation('filemanager');
     const [files, setFiles] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [uploading, setUploading] = useState(false);
@@ -117,7 +121,7 @@ const FileManagerPopup: React.FC<FileManagerPopupProps> = ({ onClose, onFileSele
             <div className="bg-white rounded-lg shadow-lg p-4 w-3/4 max-w-2xl">
                 {/* Header */}
                 <div className="flex justify-between items-center border-b pb-2">
-                    <h2 className="text-lg font-semibold">File Manager</h2>
+                    <h2 className="text-lg font-semibold">{t('filemanager')}</h2>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700">&times;</button>
                 </div>
 
