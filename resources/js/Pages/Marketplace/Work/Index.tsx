@@ -1,71 +1,70 @@
-import React, { useState } from 'react';
-import { Inertia } from '@inertiajs/inertia';
-import { usePage } from '@inertiajs/react';
+import React, { useEffect } from 'react';
+import { usePage, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import { Head } from '@inertiajs/react';
+import Pagination from '@/Components/common/Pagination';
+import PrimaryButton from '@/Components/PrimaryButton';
+import { formatDate } from '@/utils/dateFormatter';
+import Table from '@/Components/Table';
 
-interface Work {
-    id: number;
-    name: string;
-    path: string;
-    type: string;
-    folder_id: number | null;
+interface PaginationData<T> {
+    current_page: number;
+    data: T[];
+    links: PaginationLink[];
+    total: number;
 }
 
-interface Folder {
-    id: number;
-    name: string;
-    parent_id: number | null;
+interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
 }
 
-interface FileManagerProps {
-    files: File[];
-    folders: Folder[];
-    currentFolder?: Folder;
-    parentFolderId?: number | null;
-    currentNamespaces: string[];
-}
+const statusMap: Record<number, string> = {
+    0: "Default",
+    1: "Active",
+    2: "Inactive",
+    3: "Complete",
+    4: "Pending",
+    5: "Cancelled",
+    6: "Ongoing",
+    7: "Expired",
+    8: "Accepted",
+};
 
-const Work: React.FC<FileManagerProps> = ({ files, folders, currentFolder, parentFolderId, currentNamespaces }) => {
-    useLoadNamespaces(['filemanager']);
-    const { t } = useTranslation('filemanager'); // Use the 'dashboard' namespace
-   
-    const [newFolderName, setNewFolderName] = useState('');
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<any> }> = ({
+    currentNamespaces,
+    materials,
+}) => {
+    useLoadNamespaces(['material']);
+    const { t } = useTranslation('material');
+    
+    useEffect(() => {
+        document.title = t('title');
+    }, [t]);
 
-    const handleCreateFolder = () => {
-        if (!newFolderName.trim()) return;
-        Inertia.post('/mybusniess/filemanager/folder', { name: newFolderName, parent_id: currentFolder?.id || null }, {
-            onSuccess: () => setNewFolderName(''),
-        });
-    };
+    // Columns for the table
+    const columns = [
+        { key: 'id', label: t('ID') },
+        { key: 'title', label: t('Name') },
+        { key: 'created_at', label: t('Created At') },
+        { key: 'status', label: t('Status') },
+    ];
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        if (files) {
-            const formData = new FormData();
-            Array.from(files).forEach((file) => {
-                formData.append('files[]', file); // Add each file to the form data
-            });
-            formData.append('folder_id', currentFolder?.id || '');
+    // Data for the table
+    const data = materials.data.map((material: any) => ({
+        id: material.id,
+        title: material.title,
+        created_at: formatDate(material.created_at),
+        status: statusMap[material.status] || t('unknown'),
+    }));
 
-            Inertia.post('/mybusniess/filemanager/upload', formData, {
-                onSuccess: () => setSelectedFiles([]),
-            });
-        }
-    };
-
-    const handleDeleteFolder = (folderId: number) => {
-        if (confirm('Are you sure you want to delete this folder and all its contents?')) {
-            Inertia.delete(`/mybusniess/filemanager/folder/${folderId}`);
-        }
-    };
-
-    const handleDeleteFile = (fileId: number) => {
-        if (confirm('Are you sure you want to delete this file?')) {
-            Inertia.delete(`/mybusniess/filemanager/file/${fileId}`);
+    // Handle delete
+    const handleDelete = (id: number) => {
+        if (confirm(t('delete_confirm'))) {
+            router.delete(`/marketplace/materials/${id}`);
         }
     };
 
@@ -74,147 +73,55 @@ const Work: React.FC<FileManagerProps> = ({ files, folders, currentFolder, paren
             currentNamespaces={currentNamespaces}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {t('filemanager')}
+                    {t('title')}
                 </h2>
             }
             items={[]}
         >
-            <Head title={t('filemanager')} /> 
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                    <div className="file-manager p-4">
-                        <h1 className="text-2xl font-bold mb-4"> {t('filemanager')}</h1>
+                    <Head title={t('title')} />
+                    <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
 
-                        {/* Actions */}
-                        <div className="actions mb-6 flex flex-wrap gap-4">
-                            {/* Create Folder */}
-                            <input
-                                type="text"
-                                className="border rounded p-2 flex-grow"
-                                placeholder={t('new_folder_name')}
-                                value={newFolderName}
-                                onChange={(e) => setNewFolderName(e.target.value)}
-                            />
-                            <button
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                                onClick={handleCreateFolder}
-                            >
-                                {t('create_folder')}
-                            </button>
+                    {/* Use PrimaryButton to create a new material */}
+                    <PrimaryButton
+                        type="button"
+                        onClick={() => router.visit(route('materials.create'))}
+                    >
+                        {t('create_new_material')}
+                    </PrimaryButton>
 
-                            {/* Upload Files */}
-                            <input
-                                type="file"
-                                className="hidden"
-                                id="file-upload"
-                                multiple // Allow multiple file uploads
-                                onChange={handleFileUpload}
-                            />
-                            <label
-                                htmlFor="file-upload"
-                                className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-green-600"
-                            >
-                                {t('upload_files')}
-                            </label>
-                        </div>
-
-                        {/* Breadcrumbs */}
-                        <div className="breadcrumbs mb-4">
-                            {parentFolderId && (
-                                <button
-                                    className="text-blue-500 hover:underline"
-                                    onClick={() => Inertia.get(`/mybusniess/filemanager?folder=${parentFolderId}`)}
+                    {/* Render the Table component */}
+                    <Table
+                        columns={columns}
+                        data={data}
+                        actions={(row) => (
+                            <div className="flex gap-2">
+                                {/* Edit Button */}
+                                <PrimaryButton
+                                    onClick={() => router.visit(`/marketplace/materials/${row.id}/edit`)}
+                                    className="  bg-green-700  hover:bg-green-600"
                                 >
-                                    {t('back')}
-                                </button>
-                            )}
-                        </div>
+                                    {t('edit_button')}
+                                </PrimaryButton>
 
-                        {/* Files & Folders Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {/* Folders */}
-    {folders.map((folder) => (
-        <div
-            key={folder.id}
-            className="relative border p-4 rounded shadow hover:shadow-lg bg-gray-50 group"
-        >
-            <div className="flex justify-between">
-                <span
-                    className="cursor-pointer text-blue-500 hover:underline"
-                    onClick={() => Inertia.get(`/mybusniess/filemanager?folder=${folder.id}`)}
-                >
-                    📁 {folder.name}
-                </span>
-                <button
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => handleDeleteFolder(folder.id)}
-                >
-                    {t('delete')}
-                </button>
-            </div>
-        </div>
-    ))}
+                                {/* Delete Button */}
+                                <PrimaryButton
+                                    onClick={() => handleDelete(row.id)}
+                                    className="  bg-red-700  hover:bg-red-600"
+                                >
+                                    {t('delete_button')}
+                                </PrimaryButton>
+                            </div>
+                        )}
+                    />
 
-    {/* Files */}
-    {files.map((file) => (
-        <div className="relative border rounded shadow hover:shadow-lg bg-gray-50 group">
-    {/* Thumbnail or Preview */}
-    {file.type.startsWith('image/') ? (
-        <img
-            src={`/storage/${file.path}`}
-            alt={file.name}
-            className="w-full h-32 object-cover rounded-t"
-        />
-    ) : file.type === 'application/pdf' ? (
-        <iframe
-            src={`/storage/${file.path}`}
-            className="w-full h-32"
-            title="PDF Preview"
-        ></iframe>
-    ) : file.type.includes('word') ? (
-        <iframe
-            src={`https://docs.google.com/gview?url=${encodeURIComponent(
-                `/storage/${file.path}`
-            )}&embedded=true`}
-            className="w-full h-32"
-            title="Word Document Preview"
-        ></iframe>
-    ) : (
-        <div className="flex items-center justify-center h-32 bg-gray-200">
-            <span className="text-4xl">📄</span>
-        </div>
-    )}
-
-    {/* File Name */}
-    <div className="p-4">
-        <a
-            href={`/storage/${file.path}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-        >
-            {file.name}
-        </a>
-    </div>
-
-    {/* Delete Button (Visible on Hover) */}
-    <button
-        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={() => handleDeleteFile(file.id)}
-    >
-        {t('delete')}
-    </button>
-</div>
-
-        
-    ))}
-</div>
-
-                    </div>
+                    {/* Pagination Component */}
+                    <Pagination links={materials.links} total={materials.total} />
                 </div>
             </div>
         </AuthenticatedLayout>
     );
 };
 
-export default Work;
+export default Index; 
