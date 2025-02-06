@@ -119,7 +119,7 @@ export default function Register() {
                             setData('password_confirmation', e.target.value)
                         }
                          
-                    />
+                    /> 
 
  
 
