@@ -121,10 +121,7 @@ export default function Register() {
                          
                     /> 
 
- 
-
-            
-
+  
                     <InputError
                         message={errors.password_confirmation}
                         className="mt-2"
