@@ -33,7 +33,7 @@ export default function Register() {
                 className="mx-auto h-10 w-auto"
               />
               <h2 className="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-              Register  your account
+              Register your account
               </h2>
             </div>
     
