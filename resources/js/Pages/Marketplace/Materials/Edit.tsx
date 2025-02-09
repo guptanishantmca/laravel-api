@@ -10,7 +10,7 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
     const { put, setData } = useForm(material);
     useLoadNamespaces(['material']);
     const { t } = useTranslation('material'); // Use the 'dashboard' namespace
-    
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(`/marketplace/materials/update/${material.id}`);
@@ -23,14 +23,14 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
                 {t('edit.title')} {/* Ensure 'dashboard' key exists in translations */}
             </h2>} items={[]}                >
             {/* <h1>{t('edit.title')}</h1> */}
-            <Head title={t('edit.title')} /> 
+            <Head title={t('edit.title')} />
             <MaterialForm
-    material={material}
-    onSubmit={handleSubmit}
-    submitUrl={`/marketplace/materials/update/${material.id}`}
-    submitMethod="put"
-    isEdit={true}
-/>
+                material={material}
+                onSubmit={handleSubmit}
+                submitUrl={`/marketplace/materials/update/${material.id}`}
+                submitMethod="put"
+                isEdit={true}
+            />
 
         </AuthenticatedLayout>
     );
