@@ -68,18 +68,18 @@ export default function Settings() {
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">{t('Date Format')}:</label>
                                 <select
-    name="date_format"
-    value={form.date_format}
-    onChange={handleChange}
-    className="mt-1 p-2 block border rounded-md w-60"
->
-    <option value="Y-m-d">{format(currentDate, 'yyyy-MM-dd')} (Y-m-d)</option>
-    <option value="m-d-y">{format(currentDate, 'MM-dd-yyyy')} (m-d-y)</option>
-    <option value="MM/dd/yyyy">{format(currentDate, 'MM/dd/yyyy')}</option>
-    <option value="dd/MM/yyyy">{format(currentDate, 'dd/MM/yyyy')}</option>
-    <option value="Pp">{format(currentDate, 'Pp')}</option>
-    <option value="PPpp">{format(currentDate, 'PPpp')}</option>
-</select>
+                                    name="date_format"
+                                    value={form.date_format}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 block border rounded-md w-60"
+                                >
+                                    <option value="Y-m-d">{format(currentDate, 'yyyy-MM-dd')} (Y-m-d)</option>
+                                    <option value="m-d-y">{format(currentDate, 'MM-dd-yyyy')} (m-d-y)</option>
+                                    <option value="MM/dd/yyyy">{format(currentDate, 'MM/dd/yyyy')}</option>
+                                    <option value="dd/MM/yyyy">{format(currentDate, 'dd/MM/yyyy')}</option>
+                                    <option value="Pp">{format(currentDate, 'Pp')}</option>
+                                    <option value="PPpp">{format(currentDate, 'PPpp')}</option>
+                                </select>
                                 {/* <input
                                     type="text"
                                     name="date_format"
