@@ -40,7 +40,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
 }) => {
     useLoadNamespaces(['material']);
     const { t } = useTranslation('material');
-    
+
     useEffect(() => {
         document.title = t('title');
     }, [t]);
