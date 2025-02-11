@@ -77,13 +77,13 @@ const FileManagerPopup: React.FC<FileManagerPopupProps> = ({ onClose, onFileSele
             const file = event.dataTransfer.files[0];
             uploadFile(file);
         }
-        
+
     };
 
     // Handle file upload
     const uploadFile = (file: File) => {
         setUploading(true);
- 
+
         setUploadProgress(0);
         const formData = new FormData();
         formData.append('file', file);
@@ -134,10 +134,10 @@ const FileManagerPopup: React.FC<FileManagerPopupProps> = ({ onClose, onFileSele
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="border rounded p-2 w-1/2"
                     />
-                    
+
                 </div>
                 <div className="mt-4 flex justify-between items-center">
-                     
+
                     <div>
                         <input
                             type="file"
