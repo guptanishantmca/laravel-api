@@ -7,7 +7,7 @@ import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import axios from 'axios';
 interface Permission {
 
-    
+
     id: number;
     name: string;
     group: number;
@@ -37,7 +37,7 @@ const RolePermissionManager: React.FC = () => {
             setRoles(response.data.roles);
         });
     }, []);
- 
+
     const handleRoleChange = (roleId: number) => {
         setSelectedRole(roleId);
         // Fetch the permissions assigned to the selected role
@@ -73,69 +73,69 @@ const RolePermissionManager: React.FC = () => {
                 {t('title')}
             </h2>} items={[]}        >
             <Head title={t('title')} />
-         
 
-                {/* Main Content */}
-                
-                    {/* Card Wrapper */}
-                    <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                        <h1 className="text-2xl font-bold mb-4">{t('title')}</h1> 
 
-                        {/* Role Selection */}
-                        <div className="mb-4">
-                            <label className="block font-medium mb-1">{t('Select Role')}</label>
-                            <select
-                                className="w-full p-2 border rounded"
-                                value={selectedRole || ''}
-                                onChange={(e) => handleRoleChange(Number(e.target.value))}
-                            >
-                                <option value="">{t('Select Role')}</option>
-                                {roles.map((role) => (
-                                    <option key={role.id} value={role.id}>
-                                        {role.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+            {/* Main Content */}
 
-                        {/* Permissions */}
-                        <div className="mb-6">
-                        {Object.keys(permissions).map((groupId) => {
-    const group = permissions[parseInt(groupId)];
-    return (
-        <div key={groupId} className="mb-4">
-            <h2 className="font-semibold text-lg mb-2">
-                {group.group_name || 'Unnamed Group'}:
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-                {group.permissions.map((permission) => (
-                    <label key={permission.id} className="flex items-center">
-                        <input
-                            type="checkbox"
-                            checked={selectedPermissions.includes(permission.id)}
-                            onChange={() => togglePermission(permission.id)}
-                            className="mr-2"
-                        />
-                        {permission.name}
-                    </label>
-                ))}
+            {/* Card Wrapper */}
+            <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
+                <h1 className="text-2xl font-bold mb-4">{t('title')}</h1>
+
+                {/* Role Selection */}
+                <div className="mb-4">
+                    <label className="block font-medium mb-1">{t('Select Role')}</label>
+                    <select
+                        className="w-full p-2 border rounded"
+                        value={selectedRole || ''}
+                        onChange={(e) => handleRoleChange(Number(e.target.value))}
+                    >
+                        <option value="">{t('Select Role')}</option>
+                        {roles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                                {role.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Permissions */}
+                <div className="mb-6">
+                    {Object.keys(permissions).map((groupId) => {
+                        const group = permissions[parseInt(groupId)];
+                        return (
+                            <div key={groupId} className="mb-4">
+                                <h2 className="font-semibold text-lg mb-2">
+                                    {group.group_name || 'Unnamed Group'}:
+                                </h2>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {group.permissions.map((permission) => (
+                                        <label key={permission.id} className="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedPermissions.includes(permission.id)}
+                                                onChange={() => togglePermission(permission.id)}
+                                                className="mr-2"
+                                            />
+                                            {permission.name}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+
+                </div>
+
+                {/* Save Button */}
+                <button
+                    onClick={handleSave}
+                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                    {t('Save Permissions')}
+                </button>
             </div>
-        </div>
-    );
-})}
 
-                        </div>
 
-                        {/* Save Button */}
-                        <button
-                            onClick={handleSave}
-                            className="px-4 py-2 bg-blue-500 text-white rounded"
-                        >
-                            {t('Save Permissions')}
-                        </button>
-                    </div>
-              
-             
         </AuthenticatedLayout>
 
     );
