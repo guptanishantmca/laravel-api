@@ -31,7 +31,7 @@ interface FileManagerProps {
 const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder, parentFolderId, currentNamespaces }) => {
     useLoadNamespaces(['filemanager']);
     const { t } = useTranslation('filemanager'); // Use the 'dashboard' namespace
-   
+
     const [newFolderName, setNewFolderName] = useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -79,7 +79,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
             }
             items={[]}
         >
-            <Head title={t('filemanager')} /> 
+            <Head title={t('filemanager')} />
             <div className="flex-1 p-6 overflow-auto">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
                     <div className="file-manager p-4">
@@ -132,83 +132,83 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
 
                         {/* Files & Folders Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {/* Folders */}
-    {folders.map((folder) => (
-        <div
-            key={folder.id}
-            className="relative border p-4 rounded shadow hover:shadow-lg bg-gray-50 group"
-        >
-            <div className="flex justify-between">
-                <span
-                    className="cursor-pointer text-blue-500 hover:underline"
-                    onClick={() => Inertia.get(`/mybusniess/filemanager?folder=${folder.id}`)}
-                >
-                    📁 {folder.name}
-                </span>
-                <button
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => handleDeleteFolder(folder.id)}
-                >
-                    {t('delete')}
-                </button>
-            </div>
-        </div>
-    ))}
+                            {/* Folders */}
+                            {folders.map((folder) => (
+                                <div
+                                    key={folder.id}
+                                    className="relative border p-4 rounded shadow hover:shadow-lg bg-gray-50 group"
+                                >
+                                    <div className="flex justify-between">
+                                        <span
+                                            className="cursor-pointer text-blue-500 hover:underline"
+                                            onClick={() => Inertia.get(`/mybusniess/filemanager?folder=${folder.id}`)}
+                                        >
+                                            📁 {folder.name}
+                                        </span>
+                                        <button
+                                            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                            onClick={() => handleDeleteFolder(folder.id)}
+                                        >
+                                            {t('delete')}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
 
-    {/* Files */}
-    {files.map((file) => (
-        <div className="relative border rounded shadow hover:shadow-lg bg-gray-50 group">
-    {/* Thumbnail or Preview */}
-    {file.type.startsWith('image/') ? (
-        <img
-            src={`/storage/${file.path}`}
-            alt={file.name}
-            className="w-full h-32 object-cover rounded-t"
-        />
-    ) : file.type === 'application/pdf' ? (
-        <iframe
-            src={`/storage/${file.path}`}
-            className="w-full h-32"
-            title="PDF Preview"
-        ></iframe>
-    ) : file.type.includes('word') ? (
-        <iframe
-            src={`https://docs.google.com/gview?url=${encodeURIComponent(
-                `/storage/${file.path}`
-            )}&embedded=true`}
-            className="w-full h-32"
-            title="Word Document Preview"
-        ></iframe>
-    ) : (
-        <div className="flex items-center justify-center h-32 bg-gray-200">
-            <span className="text-4xl">📄</span>
-        </div>
-    )}
+                            {/* Files */}
+                            {files.map((file) => (
+                                <div className="relative border rounded shadow hover:shadow-lg bg-gray-50 group">
+                                    {/* Thumbnail or Preview */}
+                                    {file.type.startsWith('image/') ? (
+                                        <img
+                                            src={`/storage/${file.path}`}
+                                            alt={file.name}
+                                            className="w-full h-32 object-cover rounded-t"
+                                        />
+                                    ) : file.type === 'application/pdf' ? (
+                                        <iframe
+                                            src={`/storage/${file.path}`}
+                                            className="w-full h-32"
+                                            title="PDF Preview"
+                                        ></iframe>
+                                    ) : file.type.includes('word') ? (
+                                        <iframe
+                                            src={`https://docs.google.com/gview?url=${encodeURIComponent(
+                                                `/storage/${file.path}`
+                                            )}&embedded=true`}
+                                            className="w-full h-32"
+                                            title="Word Document Preview"
+                                        ></iframe>
+                                    ) : (
+                                        <div className="flex items-center justify-center h-32 bg-gray-200">
+                                            <span className="text-4xl">📄</span>
+                                        </div>
+                                    )}
 
-    {/* File Name */}
-    <div className="p-4">
-        <a
-            href={`/storage/${file.path}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-        >
-            {file.name}
-        </a>
-    </div>
+                                    {/* File Name */}
+                                    <div className="p-4">
+                                        <a
+                                            href={`/storage/${file.path}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 hover:underline"
+                                        >
+                                            {file.name}
+                                        </a>
+                                    </div>
 
-    {/* Delete Button (Visible on Hover) */}
-    <button
-        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={() => handleDeleteFile(file.id)}
-    >
-        {t('delete')}
-    </button>
-</div>
+                                    {/* Delete Button (Visible on Hover) */}
+                                    <button
+                                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                        onClick={() => handleDeleteFile(file.id)}
+                                    >
+                                        {t('delete')}
+                                    </button>
+                                </div>
 
-        
-    ))}
-</div>
+
+                            ))}
+                        </div>
 
                     </div>
                 </div>
