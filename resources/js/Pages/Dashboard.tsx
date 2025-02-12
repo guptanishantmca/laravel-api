@@ -16,18 +16,18 @@ const Dashboard: React.FC<{ currentNamespaces: string[] }> = ({ currentNamespace
                 {t('dashboard')}
             </h2>} items={[]}        >
             <Head title="Dashboard" />
-           
-               
 
-                {/* Main Content */}
-                <div className="flex-1 p-6 overflow-auto">
-                    {/* Card Wrapper */}
-                    <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
-                        <h1 className="text-2xl font-bold mb-4">{t('welcome')}</h1>
-                        <p className="text-gray-600">{t('welcome_message')}</p>
-                    </div>
+
+
+            {/* Main Content */}
+            <div className="flex-1 p-6 overflow-auto">
+                {/* Card Wrapper */}
+                <div className="bg-white shadow-md rounded-lg p-6 max-w-8xl mx-auto">
+                    <h1 className="text-2xl font-bold mb-4">{t('welcome')}</h1>
+                    <p className="text-gray-600">{t('welcome_message')}</p>
                 </div>
-          
+            </div>
+
         </AuthenticatedLayout>
     );
 };
