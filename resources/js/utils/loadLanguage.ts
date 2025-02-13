@@ -7,7 +7,7 @@ const loadLanguage = async (lang: string, namespaces: string[]) => {
       namespaces.map(async (ns) => {
         const translations = await import(`../i18n/${lang}/${ns}.json`);
         i18next.addResourceBundle(lang, ns, translations, true, true);
-         
+
       })
     );
   } catch (error) {
