@@ -9,7 +9,7 @@ const locales = { en: enUS, fi };
 // Fetch the date format from shared props
 export const getDateFormat = (): string => {
     const { date_format } = useSharedProps();
-    console.log('useSharedProps()',useSharedProps());
+    console.log('useSharedProps()', useSharedProps());
     return date_format || 'PPpp'; // Fallback to default format if undefined
 };
 
