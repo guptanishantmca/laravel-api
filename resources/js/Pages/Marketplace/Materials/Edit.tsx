@@ -29,7 +29,7 @@ const Edit: React.FC<{ currentNamespaces: string[]; material: any }> = ({ curren
                 onSubmit={handleSubmit}
                 submitUrl={`/marketplace/materials/update/${material.id}`}
                 submitMethod="put"
-                isEdit={true}
+                isEdit={true} 
             />
 
         </AuthenticatedLayout>
