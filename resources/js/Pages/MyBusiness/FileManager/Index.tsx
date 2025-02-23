@@ -74,7 +74,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
             currentNamespaces={currentNamespaces}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {t('filemanager')}
+                    {t('filemanager')} 
                 </h2>
             }
             items={[]}
