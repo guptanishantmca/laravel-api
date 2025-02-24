@@ -65,7 +65,7 @@ const FileManager: React.FC<FileManagerProps> = ({ files, folders, currentFolder
 
     const handleDeleteFile = (fileId: number) => {
         if (confirm('Are you sure you want to delete this file?')) {
-            Inertia.delete(`/mybusniess/filemanager/file/${fileId}`);
+            Inertia.delete(`/mybusniess/filemanager/file/${fileId}`); 
         }
     };
 
