@@ -6,8 +6,6 @@ import { useTranslation } from 'react-i18next';
 import useLoadNamespaces from '@/hooks/useLoadNamespaces';
 import axios from 'axios';
 interface Permission {
-
-
     id: number;
     name: string;
     group: number;
