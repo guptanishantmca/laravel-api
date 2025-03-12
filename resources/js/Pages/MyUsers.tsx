@@ -208,7 +208,7 @@ const MyUsers: React.FC<NewPageProps> = ({ users, roles }) => {
                                             onClick={() => handleEditClick(user)}
                                             className="mr-2 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-600"
                                         >
-                                            {t('edit')} 
+                                            {t('edit')}  
                                         </button>
                                         <button
                                             onClick={() => handleDeleteClick(user.id)}
