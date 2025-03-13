@@ -104,7 +104,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
                                 >
                                     {t('edit_button')}
                                 </PrimaryButton>
-
+ 
                                 {/* Delete Button */}
                                 <PrimaryButton
                                     onClick={() => handleDelete(row.id)}
