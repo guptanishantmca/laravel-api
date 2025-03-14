@@ -87,7 +87,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
                     <PrimaryButton
                         type="button"
                         onClick={() => router.visit(route('materials.create'))}
-                    >
+                    > 
                         {t('create_new_material')}
                     </PrimaryButton>
 
