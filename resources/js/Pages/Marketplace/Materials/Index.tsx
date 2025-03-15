@@ -120,7 +120,7 @@ const Index: React.FC<{ currentNamespaces: string[]; materials: PaginationData<a
                     <Pagination links={materials.links} total={materials.total} />
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AuthenticatedLayout> 
     );
 };
 
