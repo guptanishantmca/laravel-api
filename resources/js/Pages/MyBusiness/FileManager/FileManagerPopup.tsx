@@ -197,7 +197,7 @@ const FileManagerPopup: React.FC<FileManagerPopupProps> = ({ onClose, onFileSele
                         disabled={currentPage === 1}
                     >
                         Previous 
-                    </button>
+                    </button> 
                     <p>Page {currentPage} of {totalPages}</p>
                     <button
                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
