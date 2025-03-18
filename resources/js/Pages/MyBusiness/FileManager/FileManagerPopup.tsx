@@ -187,7 +187,7 @@ const FileManagerPopup: React.FC<FileManagerPopupProps> = ({ onClose, onFileSele
                             <p className="mt-2 text-center">{file.name}</p>
                         </div>
                     ))}
-                </div> 
+                </div>    
 
                 {/* Pagination */}
                 <div className="mt-4 flex justify-between items-center">
